@@ -91,7 +91,7 @@
   <script src="/static/js/currency.js?v=e55697a2f9"></script>
   <script src="/static/js/sse.js?v=9ae372e029"></script>
   
-<link rel="stylesheet" href="/static/css/demo.css?v=b46a8f31ed"><script src="/static/js/demo.js?v=0a33102c01" defer></script></head>
+<link rel="stylesheet" href="/static/css/demo.css?v=eb8fba304a"><script src="/static/js/demo.js?v=0a33102c01" defer></script></head>
 <body class="">
   
   <div id="site-bg" aria-hidden="true"></div>
@@ -110,6 +110,12 @@
 .cl-release { padding: 26px 0; border-bottom: 1px solid var(--bw); }
 .cl-release:last-child { border-bottom: none; }
 .cl-release-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin: 0 0 16px; }
+.cl-links { display: flex; flex-wrap: wrap; gap: 8px; margin: -4px 0 18px; }
+.cl-link { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 10px; border: 1px solid var(--bw2); background: var(--bg2); color: var(--t1); font-size: .84rem; font-weight: 600; text-decoration: none; transition: border-color .15s, color .15s; }
+.cl-link:hover { border-color: var(--brand); color: var(--brand-2); }
+.cl-link svg { width: 14px; height: 14px; }
+.cl-release li a { color: var(--brand-2); text-decoration: none; font-weight: 600; }
+.cl-release li a:hover { color: var(--brand); }
 .cl-release-head h2 { font-size: 1.05rem; font-weight: 800; color: var(--white); margin: 0 }
 .cl-release-date { font-size: .78rem; color: var(--t3) }
 .cl-track { margin-bottom: 14px }
@@ -134,9 +140,96 @@ code { font-family: var(--font-mono); font-size: .82em; background: var(--bg2); 
 
     <div class="cl-versions">
       <span class="cl-badge">API <b>v1.0.0</b></span>
-      <span class="cl-badge">App <b>0.1.0</b></span>
+      <span class="cl-badge">App <b>0.1.2</b></span>
     </div>
 
+    
+    <div class="cl-release">
+      <div class="cl-release-head">
+        <h2>0.1.2</h2>
+        <span class="cl-release-date">2026-11</span>
+        
+        <span class="cl-badge">App 0.1.2</span>
+      </div>
+      
+      <div class="cl-links">
+        <a class="cl-link" href="https://demo.firogate.com" target="_blank" rel="noopener">Live demo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a><a class="cl-link" href="https://github.com/firogate/demo" target="_blank" rel="noopener">Demo source<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+      </div>
+      
+
+      
+        
+        <div class="cl-track">
+          <div class="cl-track-label">API</div>
+          
+            
+            <p class="cl-nochange">No API changes.</p>
+            
+          
+        </div>
+        
+      
+        
+        <div class="cl-track">
+          <div class="cl-track-label">App</div>
+          
+            
+            <div class="cl-group">
+              <div class="cl-group-label">Added</div>
+              <ul>
+                
+                <li><a href="https://demo.firogate.com" target="_blank" rel="noopener">Live demo</a>: try the dashboard, checkout and API with fake FIRO. No install.</li>
+                
+                <li>Tips on hover explain pages, cards and settings. On phones, tap the ⓘ.</li>
+                
+                <li>Sidebar icons animate once when tapped.</li>
+                
+                <li>New landing page with real screenshots of the dashboard and checkout.</li>
+                
+              </ul>
+            </div>
+            
+          
+            
+            <div class="cl-group">
+              <div class="cl-group-label">Changed</div>
+              <ul>
+                
+                <li>Flat design: no shadows or glow.</li>
+                
+                <li>Shorter text: explanations moved into tips.</li>
+                
+                <li>The home status page is one simple list.</li>
+                
+                <li>Phones: titles and buttons fit, tables turn into cards, and the bottom bar floats.</li>
+                
+              </ul>
+            </div>
+            
+          
+            
+            <div class="cl-group">
+              <div class="cl-group-label">Fixed</div>
+              <ul>
+                
+                <li>The Changelog page no longer crashes.</li>
+                
+                <li>Checkout hides the empty price box when there is no live price, in all 25 styles.</li>
+                
+                <li>Pay links no longer get stuck on &quot;Loading price…&quot;.</li>
+                
+                <li>Payment Activity opens on today, not on 2023.</li>
+                
+                <li>The folded sidebar shows the Settings and Account icons.</li>
+                
+              </ul>
+            </div>
+            
+          
+        </div>
+        
+      
+    </div>
     
     <div class="cl-release">
       <div class="cl-release-head">
@@ -145,6 +238,7 @@ code { font-family: var(--font-mono); font-size: .82em; background: var(--bg2); 
         
         <span class="cl-badge">App 0.1.0</span>
       </div>
+      
 
       
         
@@ -272,6 +366,7 @@ code { font-family: var(--font-mono); font-size: .82em; background: var(--bg2); 
         
         <span class="cl-badge">App 0.0.9</span>
       </div>
+      
 
       
         
@@ -329,6 +424,7 @@ code { font-family: var(--font-mono); font-size: .82em; background: var(--bg2); 
         
         <span class="cl-badge">App 0.0.8</span>
       </div>
+      
 
       
         
@@ -414,6 +510,7 @@ code { font-family: var(--font-mono); font-size: .82em; background: var(--bg2); 
         
         <span class="cl-badge">App 0.0.7</span>
       </div>
+      
 
       
         
@@ -480,6 +577,7 @@ code { font-family: var(--font-mono); font-size: .82em; background: var(--bg2); 
         <span class="cl-badge">API v1.0</span>
         
       </div>
+      
 
       
         
@@ -522,6 +620,7 @@ code { font-family: var(--font-mono); font-size: .82em; background: var(--bg2); 
         <span class="cl-badge">API v1.0</span>
         
       </div>
+      
 
       
         
@@ -590,6 +689,7 @@ code { font-family: var(--font-mono); font-size: .82em; background: var(--bg2); 
         <span class="cl-badge">API v1.0</span>
         
       </div>
+      
 
       
         

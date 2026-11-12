@@ -28,4 +28,4 @@ export const THUMBNAILS = {
   "vinyl": "/static/images/themes/vinyl.jpg",
   "zen": "/static/images/themes/zen.jpg"
 };
-export const APP_VERSION = "0.1.0";
+export const APP_VERSION = "0.1.2";

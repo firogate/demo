@@ -69,3 +69,6 @@ body.dm-has-pay { padding-bottom: 110px; }
 .dm-ago { color: var(--t3, #7D888B); font-size: .78rem; }
 .dm-err { padding: 0 12px 8px; color: #F2604F; font-size: .8rem; }
 .dm-pre { margin: 0; padding: 10px 12px 12px; max-height: 260px; overflow: auto; font: .74rem/1.55 var(--mono, monospace); color: var(--t2, #B9C2C4); border-top: 1px solid var(--bw, rgba(255,255,255,.08)); white-space: pre-wrap; word-break: break-all; }
+
+.fg-method.fg-method-float { bottom: 96px; }
+body.fg-float-on { padding-bottom: 150px; }
