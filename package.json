@@ -1,0 +1,17 @@
+{
+  "name": "firogate-demo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "python3 build/render.py ../firogate-ce",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "qrcode-generator": "2.0.4"
+  },
+  "devDependencies": {
+    "wrangler": "4.152.0"
+  }
+}

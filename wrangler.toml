@@ -1,0 +1,27 @@
+name = "firogate-demo"
+main = "src/worker.js"
+compatibility_date = "2026-09-25"
+
+routes = [
+  { pattern = "demo.firogate.com", custom_domain = true }
+]
+
+rules = [
+  { type = "Text", globs = ["**/*.sql"], fallthrough = true }
+]
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "firogate-demo"
+database_id = "5858e0c7-a60b-4821-99d9-ae651c5b99e0"
+
+[triggers]
+crons = ["17 * * * *"]
+
+[observability]
+enabled = true

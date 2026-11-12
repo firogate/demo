@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="lang-en">
+<head>
+  <meta charset="UTF-8">
+  <script>
+    (function () {
+      try {
+        var m = localStorage.getItem('firo-theme') || 'dark';
+        var light = m === 'light' ||
+          (m === 'system' && window.matchMedia &&
+           window.matchMedia('(prefers-color-scheme: light)').matches);
+        if (light) document.documentElement.setAttribute('data-theme', 'light');
+      } catch (e) {}
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>About FiroGate</title>
+  <meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="Content-Language" content="en">
+  <script>
+    (function(){
+      try {
+        var path = (location.pathname || '').replace(/\/$/, '') || '/';
+        if (path !== '/' && path !== '/login') return;
+
+        function cookieGet(name){
+          var m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()\[\]\\\/\+^])/g,'\\$1') + '=([^;]*)'));
+          return m ? decodeURIComponent(m[1]) : '';
+        }
+        function cookieSet(name, value, maxAgeSeconds){
+          var host = location.hostname;
+          var parts = host.split('.');
+          var dom = '';
+          if (parts.length >= 2 && host !== 'localhost' && !/^\d+\.\d+\.\d+\.\d+$/.test(host)) {
+            dom = '; domain=.' + parts.slice(-2).join('.');
+          }
+          var sec = location.protocol === 'https:' ? '; Secure' : '';
+          document.cookie = name + '=' + encodeURIComponent(value) + '; Path=/; Max-Age=' + maxAgeSeconds + '; SameSite=Lax' + sec + dom;
+        }
+
+        var now = Date.now();
+        var raw = cookieGet('fg_nav_count');
+        var arr = raw ? raw.split('.').map(function(x){ return parseInt(x,10); }).filter(function(x){ return !isNaN(x); }) : [];
+        var recent = arr.filter(function(t){ return now - t < 10000; });
+        recent.push(now);
+        if (recent.length > 10) recent = recent.slice(-10);
+        cookieSet('fg_nav_count', recent.join('.'), 60);
+
+        if (recent.length >= 5) {
+          window._fgLoopBreak = true;
+        }
+      } catch(_) {}
+    })();
+  </script>
+  <style>
+    :root {
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+    }
+    body { font-family: var(--font-sans); }
+    code, pre, .mono { font-family: var(--font-mono); }
+  </style>
+  <link rel="stylesheet" href="/static/css/main.css?v=dbc6e01987">
+  <link rel="stylesheet" href="/static/css/i18n.css?v=2806343db7">
+  <link rel="stylesheet" href="/static/fonts/gf-faces.css?v=478333b3ba">
+  <style>
+    @font-face{font-family:'Poiret One';src:url('/static/fonts/gf-poiret-one-400.woff2')format('woff2');font-weight:400;font-style:normal;font-display:block}
+    @font-face{font-family:'Bangers';src:url('/static/fonts/gf-bangers-400.woff2')format('woff2');font-weight:400;font-style:normal;font-display:block}
+    @font-face{font-family:'Monoton';src:url('/static/fonts/gf-monoton-400.woff2')format('woff2');font-weight:400;font-style:normal;font-display:block}
+    @font-face{font-family:'Pacifico';src:url('/static/fonts/gf-pacifico-400.woff2')format('woff2');font-weight:400;font-style:normal;font-display:block}
+    @font-face{font-family:'Caveat';src:url('/static/fonts/gf-caveat-400.woff2')format('woff2');font-weight:400 700;font-style:normal;font-display:block}
+    @font-face{font-family:'Cairo';src:url('/static/fonts/gf-cairo-400-arabic.woff2')format('woff2');font-weight:400 700;font-style:normal;font-display:block;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
+    @font-face{font-family:'Tajawal';src:url('/static/fonts/gf-tajawal-400-arabic.woff2')format('woff2');font-weight:400;font-style:normal;font-display:block;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
+    @font-face{font-family:'Tajawal';src:url('/static/fonts/gf-tajawal-700-arabic.woff2')format('woff2');font-weight:700;font-style:normal;font-display:block;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
+    @font-face{font-family:'Noto Sans Arabic';src:url('/static/fonts/noto-sans-arabic-arabic-400-normal.woff2')format('woff2');font-weight:400;font-style:normal;font-display:swap;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
+    @font-face{font-family:'Noto Sans Arabic';src:url('/static/fonts/noto-sans-arabic-arabic-700-normal.woff2')format('woff2');font-weight:700;font-style:normal;font-display:swap;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
+    @font-face{font-family:'Noto Sans Cyrillic';src:url('/static/fonts/noto-sans-cyrillic-400.woff2')format('woff2');font-weight:400;font-style:normal;font-display:swap;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+    @font-face{font-family:'Noto Sans Cyrillic';src:url('/static/fonts/noto-sans-cyrillic-700.woff2')format('woff2');font-weight:700;font-style:normal;font-display:swap;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+    @font-face{font-family:'Noto Sans SC';src:url('/static/fonts/noto-sans-sc-400-subset.woff2')format('woff2');font-weight:400 700;font-style:normal;font-display:swap;unicode-range:U+4e2d,U+4f53,U+6587,U+7b80}
+  </style>
+  <link rel="icon" href="/static/favicon.ico?v=ae3494a7d3">
+  <script>
+    window.__FG_I18N__ = {
+      lang: "en",
+      dir:  "ltr",
+      supported: ["en","ar","ru","de","zh"]
+    };
+  </script>
+  <script src="/static/js/i18n.js?v=208a949de1"></script>
+  <script src="/static/js/currency.js?v=e55697a2f9"></script>
+  <script src="/static/js/sse.js?v=9ae372e029"></script>
+  
+<style>
+.ab-wrap{max-width:640px;margin:0 auto;padding:40px 24px 80px;font-family:var(--font)}
+.ab-title{font-size:1.6rem;font-weight:800;color:var(--t1);margin:0 0 6px;letter-spacing:-.02em}
+.ab-lead{color:var(--t1);font-size:.92rem;line-height:1.75;margin:0 0 28px}
+.ab-block{margin-bottom:24px}
+.ab-block h2{font-size:.95rem;font-weight:700;color:var(--y);margin:0 0 8px}
+.ab-block p{color:var(--t2);font-size:.85rem;line-height:1.7;margin:0}
+.ab-block code{font-family:var(--mono);font-size:.82em;color:var(--t1);background:var(--bw);padding:1px 6px;border-radius:4px}
+.ab-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:32px}
+.ab-who-row{display:flex;align-items:center;gap:32px}
+.ab-who-list{flex:1;min-width:0}
+.ab-who-list div{margin-bottom:14px}
+.ab-who-list div:last-child{margin-bottom:0}
+.ab-who-list strong{display:block;font-size:.85rem;font-weight:700;color:var(--t1);margin-bottom:2px}
+.ab-who-list span{font-size:.82rem;color:var(--t2);line-height:1.6}
+.ab-who-list a{color:var(--y)}
+.ab-who-imgs{display:flex;align-items:center;gap:20px;flex-shrink:0;width:180px}
+.ab-who-imgs img{width:50%;height:auto;opacity:0;filter:drop-shadow(0 14px 24px rgba(0,0,0,.5));transition:opacity 1.2s ease}
+.ab-who-imgs img.is-on{opacity:1}
+.ab-who-imgs img:last-child{transform:rotate(9deg)}
+html[data-theme="light"] .ab-who-imgs img{filter:drop-shadow(0 12px 20px rgba(0,0,0,.16))}
+@media (max-width:640px){.ab-who-imgs{display:none}}
+</style>
+
+<link rel="stylesheet" href="/static/css/demo.css?v=b46a8f31ed"><script src="/static/js/demo.js?v=0a33102c01" defer></script></head>
+<body class="">
+  
+  <div id="site-bg" aria-hidden="true"></div>
+
+  
+
+  <div id="page-wrap">
+    
+<div class="ab-wrap">
+  <h1 class="ab-title">About FiroGate</h1>
+  <p class="ab-lead">FiroGate is a self-hosted, non-custodial payment gateway for Firo. It runs on your own server, connects to your own Firo node, and every payment settles directly to your wallet.</p>
+
+  <div class="ab-block">
+    <h2>How it works</h2>
+    <p>Connect a Spark view key, create an invoice through the dashboard or the API, and FiroGate watches the blockchain for the matching payment. Once confirmed, a signed webhook notifies your backend automatically.</p>
+  </div>
+
+  <div class="ab-block">
+    <h2>No custody</h2>
+    <p>FiroGate never holds a spend key. Addresses are derived from your view key and funds move directly from customer to merchant on-chain.</p>
+  </div>
+
+  <div class="ab-block">
+    <h2>How payments are confirmed</h2>
+    <p>FiroGate decides a payment is final using one thing only: how many blocks have been mined on top of it your <strong>Confirmation Policy</strong> (Instant / Fast / Standard / High Security), which you set for your instance. A feature called <code>blocknotify</code> just wakes the scanner the moment a new block arrives instead of waiting on a timer, so detection is fast but it never changes what counts as confirmed. Firo's own network-level ChainLocks are what make trusting plain block confirmations safe, so FiroGate doesn't need to check them itself. You may also see an "InstantLock" flag on some Firo transactions FiroGate deliberately does not use it to confirm payments, because it isn't reliably available for every Spark payment and would be an unsafe thing to depend on for settlement.</p>
+  </div>
+
+  <div class="ab-block">
+    <h2>Open source</h2>
+    <p>FiroGate is a complete payment platform, fully open source. Self-host it, customize it, extend it however your infrastructure needs.</p>
+  </div>
+
+  <div class="ab-block">
+    <h2>Who uses FiroGate</h2>
+    <div class="ab-who-row">
+      <div class="ab-who-list">
+        <div><strong>Developers</strong><span>A clean REST API you can integrate in an afternoon. Full reference in the <a href="/docs">API Docs</a>.</span></div>
+        <div><strong>Online stores</strong><span>Start accepting Firo instantly. No manual review, no chargebacks, no middleman.</span></div>
+        <div><strong>Anyone using Firo</strong><span>Private, non-custodial payments built on Firo.</span></div>
+      </div>
+      <div class="ab-who-imgs" id="ab-who-imgs" data-base="/static/images/about/" aria-hidden="true">
+        <img alt="">
+        <img alt="">
+      </div>
+    </div>
+  </div>
+
+  <div class="ab-links">
+    <a href="/docs" class="btn btn-o btn-sm">API Docs</a>
+  </div>
+</div>
+<script>
+(function() {
+  var imgsWrap = document.getElementById('ab-who-imgs');
+  if (!imgsWrap) return;
+  var base = imgsWrap.dataset.base;
+  var srcs = ['1.svg','2.svg','3.svg','4.svg','5.svg','6.svg'].map(function(f) { return base + f; });
+  var used = [];
+  function pick() {
+    var choices = srcs.filter(function(s) { return used.indexOf(s) === -1; });
+    if (!choices.length) { used = []; choices = srcs; }
+    var s = choices[Math.floor(Math.random() * choices.length)];
+    used.push(s);
+    if (used.length > 4) used.shift();
+    return s;
+  }
+  function swap(img) {
+    img.classList.remove('is-on');
+    setTimeout(function() {
+      img.src = pick();
+      img.classList.add('is-on');
+    }, 900);
+  }
+  var slots = imgsWrap.querySelectorAll('img');
+  slots.forEach(function(img, i) {
+    img.src = pick();
+    setTimeout(function() { img.classList.add('is-on'); }, 60 + i * 200);
+    setInterval(function() { swap(img); }, 15000 + i * 4000);
+  });
+})();
+</script>
+
+  </div>
+
+  
+  <footer id="site-footer">
+    <div class="footer-inner">
+
+      <div class="footer-top">
+
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/about" class="footer-link">About</a>
+          <a href="/docs" class="footer-link">API Docs</a>
+        </nav>
+
+        <div class="footer-social">
+          <a href="https://github.com/firoorg" class="footer-icon-link" target="_blank" rel="noopener noreferrer" aria-label="FiroOrg on GitHub">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+            </svg>
+          </a>
+          <a href="https://gitlab.com/firoorg" class="footer-icon-link" target="_blank" rel="noopener noreferrer" aria-label="FiroOrg on GitLab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M23.955 13.587l-1.342-4.135-2.664-8.189a.455.455 0 0 0-.867 0L16.418 9.45H7.582L4.918 1.263a.455.455 0 0 0-.867 0L1.386 9.452.044 13.587a.924.924 0 0 0 .331 1.023L12 23.054l11.625-8.443a.92.92 0 0 0 .33-1.024"/>
+            </svg>
+          </a>
+          <a href="https://stackwallet.com" class="footer-icon-link" target="_blank" rel="noopener noreferrer" aria-label="Stack Wallet" title="Stack Wallet">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+          </a>
+          <a href="https://firo.org/2024/07/12/campfire-firo-wallet.html" class="footer-icon-link" target="_blank" rel="noopener noreferrer" aria-label="Campfire Wallet" title="Campfire Wallet">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M12 22c-2 0-7-2-7-8 0-3 1.5-5 3-6.5S12 4 12 2c0 2 2.5 3.5 4 5.5S19 11 19 14c0 6-5 8-7 8z" fill="currentColor" opacity=".15"/>
+              <path d="M12 22c-2 0-7-2-7-8 0-3 1.5-5 3-6.5S12 4 12 2c0 2 2.5 3.5 4 5.5S19 11 19 14c0 6-5 8-7 8z"/>
+              <path d="M12 22c-1 0-4-1-4-5 0-2 1-3 2-4s2-2 2-3c0 1 1 2 2 3s2 2 2 4c0 4-3 5-4 5z"/>
+            </svg>
+          </a>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <span class="footer-copy">&#169; 2026</span>
+        <div class="footer-right">
+          <div data-theme-toggle-mount style="display:inline-flex;vertical-align:middle"></div>
+          <div class="fg-i18n-mount fg-i18n-dropup" data-i18n-switcher="compact" data-testid="footer-i18n-switcher"></div>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <style>
+    #site-footer {
+      position: relative;
+      z-index: 2;
+      border-top: 1px solid rgba(255,255,255,.06);
+      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.35) 100%);
+      padding: 0 22px;
+    }
+
+    #site-footer::before {
+      content: '';
+      display: block;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(var(--brand-rgb),.15), transparent);
+      margin-bottom: 0;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 0 16px;
+    }
+
+    .footer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px 24px;
+      flex-wrap: wrap;
+      padding-bottom: 14px;
+    }
+
+    .footer-nav {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px 20px;
+    }
+
+    .footer-social { display: flex; align-items: center; gap: 8px; }
+    .footer-icon-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px 4px 6px 4px;
+      border: 1px solid rgba(255,255,255,.06);
+      background: rgba(255,255,255,.03);
+      color: var(--t3);
+      text-decoration: none;
+      transition: color var(--t), border-color var(--t), background var(--t), transform var(--t);
+      flex-shrink: 0;
+    }
+    .footer-icon-link:hover {
+      color: var(--y);
+      border-color: rgba(var(--brand-rgb),.25);
+      background: rgba(var(--brand-rgb),.07);
+      transform: translateY(-2px);
+    }
+
+    .footer-link {
+      font-size: .8rem;
+      font-weight: 500;
+      color: var(--t1);
+      text-decoration: none;
+      letter-spacing: .01em;
+      transition: color var(--t);
+    }
+    .footer-link:hover { color: var(--y); }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-copy {
+      font-size: .72rem;
+      color: var(--t1);
+      font-weight: 500;
+      letter-spacing: .02em;
+      white-space: nowrap;
+    }
+
+    body:has(.layout) #site-footer { display: none; }
+
+    @media (max-width: 640px) {
+      .footer-top {
+        justify-content: center;
+        text-align: center;
+        gap: 12px 16px;
+      }
+      .footer-nav { justify-content: center; gap: 4px 14px; }
+      .footer-bottom { padding-bottom: max(4px, env(safe-area-inset-bottom)); }
+    }
+  </style>
+
+  <div id="tc"></div>
+  
+  <script>
+    window.DASHBOARD_URL = "/dashboard/";
+    window.LOGIN_URL     = "/";
+    window.CHECKOUT_URL  = "";
+    window.API_BASE      = "";
+  </script>
+  <script src="/static/js/app.js?v=aa9f85ccd2"></script>
+  <script src="/static/js/sb-nav-tree.js?v=9a2649785b"></script>
+  <script src="/static/js/tips.js?v=c95c284bfc"></script>
+  <script>
+    (function(){
+      function mount(){
+        if (window.i18n && typeof window.i18n.mountSwitchers === 'function') {
+          try { window.i18n.mountSwitchers(); } catch(_) {}
+          try { window.i18n.translate(document.body); } catch(_) {}
+        }
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', mount);
+      } else { mount(); }
+      setTimeout(mount, 250);
+      setTimeout(mount, 1000);
+    })();
+  </script>
+  
+  <script>
+  (function () {
+    var KEY = 'firo-theme';
+    var mql = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
+
+    function stored() {
+      try { return localStorage.getItem(KEY) || 'dark'; } catch (e) { return 'dark'; }
+    }
+    function effective(mode) {
+      if (mode === 'system') return (mql && mql.matches) ? 'light' : 'dark';
+      return mode;
+    }
+    function paint(mode, animate) {
+      var root = document.documentElement;
+      if (animate) {
+        root.classList.add('theme-anim');
+        setTimeout(function () { root.classList.remove('theme-anim'); }, 400);
+      }
+      if (effective(mode) === 'light') root.setAttribute('data-theme', 'light');
+      else root.removeAttribute('data-theme');
+      document.querySelectorAll('[data-theme-switch]').forEach(function (sw) {
+        sw.querySelectorAll('[data-theme-opt]').forEach(function (b) {
+          var on = b.getAttribute('data-theme-opt') === mode;
+          b.setAttribute('aria-checked', on ? 'true' : 'false');
+          b.style.background = on ? 'var(--bg0)' : 'transparent';
+          b.style.color      = on ? 'var(--y)'   : 'var(--t3)';
+          b.style.boxShadow  = on ? '0 1px 3px rgba(0,0,0,.18)' : 'none';
+        });
+      });
+    }
+    function setMode(mode) {
+      try { localStorage.setItem(KEY, mode); } catch (e) {}
+      paint(mode, true);
+    }
+    window.__setTheme = setMode;
+    window.toggleTheme = function () { setMode(effective(stored()) === 'light' ? 'dark' : 'light'); };
+
+    paint(stored(), false);
+    if (mql) {
+      var onOS = function () { if (stored() === 'system') paint('system', true); };
+      if (mql.addEventListener) mql.addEventListener('change', onOS);
+      else if (mql.addListener) mql.addListener(onOS);
+    }
+
+    var ICON = {
+      light: '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 15.3V14.7M2.8 13.2l.47-.47M.67 8h.66M2.8 2.8l.47.47M8 1.3V.67M12.7 3.3l.47-.47M14.7 8h.66M12.7 12.7l.47.47M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"/></svg>',
+      system:'<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M13.76 10.24V5.63c0-1.07 0-1.61-.21-2.02a1.9 1.9 0 0 0-.84-.84c-.41-.21-.95-.21-2.02-.21H5.31c-1.07 0-1.61 0-2.02.21-.36.18-.65.48-.84.84-.21.41-.21.95-.21 2.02v4.61M13.76 10.24H2.24M13.76 10.24c.35 0 .64.29.64.64 0 1.06-.86 1.92-1.92 1.92H3.52c-1.06 0-1.92-.86-1.92-1.92 0-.35.29-.64.64-.64"/></svg>',
+      dark:  '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 7.98A4.33 4.33 0 0 1 10.33 10 4.33 4.33 0 0 1 6 5.67 4.33 4.33 0 0 1 8.02 2 6 6 0 1 0 14 7.98Z"/></svg>'
+    };
+    function optBtn(mode, label) {
+      return '<button type="button" role="radio" data-theme-opt="' + mode + '" title="' + label + '" aria-label="' + label + '" ' +
+        'onclick="__setTheme(\'' + mode + '\')" ' +
+        'style="flex:1;display:flex;align-items:center;justify-content:center;height:26px;border:none;border-radius:14px;' +
+        'background:transparent;color:var(--t3);cursor:pointer;transition:background .2s,color .2s;">' + ICON[mode] + '</button>';
+    }
+    function switchHTML() {
+      return '<div data-theme-switch role="radiogroup" aria-label="Theme" ' +
+        'style="display:flex;align-items:center;gap:2px;height:32px;padding:3px;border-radius:18px;' +
+        'background:var(--bg3);border:1px solid var(--bw);width:104px;">' +
+        optBtn('light','Light') + optBtn('system','System') + optBtn('dark','Dark') +
+        '</div>';
+    }
+    function mount() {
+      document.querySelectorAll('[data-theme-toggle-mount]').forEach(function (el) {
+        if (el.querySelector('[data-theme-switch]')) return;
+        el.innerHTML = switchHTML();
+      });
+      paint(stored(), false);
+    }
+    window.__mountThemeSwitch = mount;
+    if (document.readyState !== 'loading') mount();
+    else document.addEventListener('DOMContentLoaded', mount);
+    setTimeout(mount, 800);
+  })();
+  </script>
+</body>
+</html>

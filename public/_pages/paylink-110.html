@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="lang-en">
+<head>
+  <meta charset="UTF-8">
+  <script>
+    (function () {
+      try {
+        var m = localStorage.getItem('firo-theme') || 'dark';
+        var light = m === 'light' ||
+          (m === 'system' && window.matchMedia &&
+           window.matchMedia('(prefers-color-scheme: light)').matches);
+        if (light) document.documentElement.setAttribute('data-theme', 'light');
+      } catch (e) {}
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>@@TITLE@@ Pay with Firo</title>
+  <meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="Content-Language" content="en">
+  <script>
+    (function(){
+      try {
+        var path = (location.pathname || '').replace(/\/$/, '') || '/';
+        if (path !== '/' && path !== '/login') return;
+
+        function cookieGet(name){
+          var m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()\[\]\\\/\+^])/g,'\\$1') + '=([^;]*)'));
+          return m ? decodeURIComponent(m[1]) : '';
+        }
+        function cookieSet(name, value, maxAgeSeconds){
+          var host = location.hostname;
+          var parts = host.split('.');
+          var dom = '';
+          if (parts.length >= 2 && host !== 'localhost' && !/^\d+\.\d+\.\d+\.\d+$/.test(host)) {
+            dom = '; domain=.' + parts.slice(-2).join('.');
+          }
+          var sec = location.protocol === 'https:' ? '; Secure' : '';
+          document.cookie = name + '=' + encodeURIComponent(value) + '; Path=/; Max-Age=' + maxAgeSeconds + '; SameSite=Lax' + sec + dom;
+        }
+
+        var now = Date.now();
+        var raw = cookieGet('fg_nav_count');
+        var arr = raw ? raw.split('.').map(function(x){ return parseInt(x,10); }).filter(function(x){ return !isNaN(x); }) : [];
+        var recent = arr.filter(function(t){ return now - t < 10000; });
+        recent.push(now);
+        if (recent.length > 10) recent = recent.slice(-10);
+        cookieSet('fg_nav_count', recent.join('.'), 60);
+
+        if (recent.length >= 5) {
+          window._fgLoopBreak = true;
+        }
+      } catch(_) {}
+    })();
+  </script>
+  <style>
+    :root {
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+    }
+    body { font-family: var(--font-sans); }
+    code, pre, .mono { font-family: var(--font-mono); }
+  </style>
+  <link rel="stylesheet" href="/static/css/main.css?v=dbc6e01987">
+  <link rel="stylesheet" href="/static/css/i18n.css?v=2806343db7">
+  <link rel="stylesheet" href="/static/fonts/gf-faces.css?v=478333b3ba">
+  <style>
+    @font-face{font-family:'Poiret One';src:url('/static/fonts/gf-poiret-one-400.woff2')format('woff2');font-weight:400;font-style:normal;font-display:block}
+    @font-face{font-family:'Bangers';src:url('/static/fonts/gf-bangers-400.woff2')format('woff2');font-weight:400;font-style:normal;font-display:block}
+    @font-face{font-family:'Monoton';src:url('/static/fonts/gf-monoton-400.woff2')format('woff2');font-weight:400;font-style:normal;font-display:block}
+    @font-face{font-family:'Pacifico';src:url('/static/fonts/gf-pacifico-400.woff2')format('woff2');font-weight:400;font-style:normal;font-display:block}
+    @font-face{font-family:'Caveat';src:url('/static/fonts/gf-caveat-400.woff2')format('woff2');font-weight:400 700;font-style:normal;font-display:block}
+    @font-face{font-family:'Cairo';src:url('/static/fonts/gf-cairo-400-arabic.woff2')format('woff2');font-weight:400 700;font-style:normal;font-display:block;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
+    @font-face{font-family:'Tajawal';src:url('/static/fonts/gf-tajawal-400-arabic.woff2')format('woff2');font-weight:400;font-style:normal;font-display:block;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
+    @font-face{font-family:'Tajawal';src:url('/static/fonts/gf-tajawal-700-arabic.woff2')format('woff2');font-weight:700;font-style:normal;font-display:block;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
+    @font-face{font-family:'Noto Sans Arabic';src:url('/static/fonts/noto-sans-arabic-arabic-400-normal.woff2')format('woff2');font-weight:400;font-style:normal;font-display:swap;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
+    @font-face{font-family:'Noto Sans Arabic';src:url('/static/fonts/noto-sans-arabic-arabic-700-normal.woff2')format('woff2');font-weight:700;font-style:normal;font-display:swap;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
+    @font-face{font-family:'Noto Sans Cyrillic';src:url('/static/fonts/noto-sans-cyrillic-400.woff2')format('woff2');font-weight:400;font-style:normal;font-display:swap;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+    @font-face{font-family:'Noto Sans Cyrillic';src:url('/static/fonts/noto-sans-cyrillic-700.woff2')format('woff2');font-weight:700;font-style:normal;font-display:swap;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+    @font-face{font-family:'Noto Sans SC';src:url('/static/fonts/noto-sans-sc-400-subset.woff2')format('woff2');font-weight:400 700;font-style:normal;font-display:swap;unicode-range:U+4e2d,U+4f53,U+6587,U+7b80}
+  </style>
+  <link rel="icon" href="/static/favicon.ico?v=ae3494a7d3">
+  <script>
+    window.__FG_I18N__ = {
+      lang: "en",
+      dir:  "ltr",
+      supported: ["en","ar","ru","de","zh"]
+    };
+  </script>
+  <script src="/static/js/i18n.js?v=208a949de1"></script>
+  <script src="/static/js/currency.js?v=e55697a2f9"></script>
+  <script src="/static/js/sse.js?v=9ae372e029"></script>
+  
+<style>
+#site-footer { display: none !important; }
+#site-nav    { display: none !important; }
+
+@font-face{font-family:'Space Grotesk';src:url('/static/fonts/gf-space-grotesk-400.woff2') format('woff2');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Space Grotesk';src:url('/static/fonts/gf-space-grotesk-400.woff2') format('woff2');font-weight:500;font-style:normal;font-display:block}
+@font-face{font-family:'Space Grotesk';src:url('/static/fonts/gf-space-grotesk-400.woff2') format('woff2');font-weight:600;font-style:normal;font-display:block}
+@font-face{font-family:'Space Grotesk';src:url('/static/fonts/gf-space-grotesk-400.woff2') format('woff2');font-weight:700;font-style:normal;font-display:block}
+@font-face{font-family:'JetBrains Mono';src:url('/static/fonts/gf-jetbrains-mono-400.woff2') format('woff2');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'JetBrains Mono';src:url('/static/fonts/gf-jetbrains-mono-400.woff2') format('woff2');font-weight:600;font-style:normal;font-display:block}
+@font-face{font-family:'JetBrains Mono';src:url('/static/fonts/gf-jetbrains-mono-400.woff2') format('woff2');font-weight:700;font-style:normal;font-display:block}
+
+.pl-card{
+  --bg:#121110; --panel:#1A1A1A; --panel2:#201f1e; --sunk:#141312;
+  --line:rgba(255,255,255,.07); --line2:rgba(255,255,255,.13);
+  --txt:#f0edea; --mut:#8C8C8C; --dim:#5a5754;
+  --ruby:#8D1B28; --ruby2:#B82334; --ruby-soft:rgba(184,35,52,.12);
+  --err-txt:#e58a94; --exp-txt:#d4a843;
+  --pl-mono:'JetBrains Mono',var(--mono),monospace;
+  --pl-font:'Space Grotesk',var(--font),system-ui,sans-serif;
+}
+html[data-theme="light"] .pl-card{
+  --bg:#FAFAFA; --panel:#FFFFFF; --panel2:#F5F5F5; --sunk:#ECECEC;
+  --line:rgba(0,0,0,.08); --line2:rgba(0,0,0,.14);
+  --txt:#1A1A1A; --mut:#6B6458; --dim:#8C8C8C;
+  --ruby:#8D1B28; --ruby2:#B82334; --ruby-soft:rgba(184,35,52,.10);
+  --err-txt:#B82334; --exp-txt:#9c6f10;
+}
+
+.pl-wrap{
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 26px 14px 90px;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(184,35,52,.09) 0%, transparent 65%),
+    var(--bg1);
+}
+
+.pl-card{
+  width:100%;max-width:440px;border-radius:22px;overflow:visible;
+  background:linear-gradient(165deg,var(--panel),#131211 90%);
+  border:1px solid var(--line);
+  box-shadow:0 40px 100px -30px rgba(0,0,0,.75);
+  font-family: var(--pl-font);
+  color: var(--txt);
+}
+html[data-theme="light"] .pl-card{
+  background:linear-gradient(165deg,var(--panel),#f0f0f0 90%);
+}
+
+.pl-topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.015);
+  border-radius:22px 22px 0 0;
+}
+.pl-topbar-l, .pl-topbar-r{ display:flex; align-items:center; gap:6px; }
+
+.chip{
+  display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;
+  border:1px solid var(--line);border-radius:999px;background:var(--sunk);
+  font:600 10.5px var(--pl-mono);color:var(--mut);
+  white-space:nowrap;transition:color .15s,border-color .15s,background .15s;
+}
+.chip svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chip:hover{color:var(--txt)}
+.chip.act{color:var(--txt)}
+
+.pl-topbar .fg-curr-wrap{ display:inline-flex; font-family:inherit; }
+.pl-topbar .fg-curr-toggle{
+  height:26px;padding:0 10px;gap:6px;
+  background:var(--sunk);border:1px solid var(--line);border-radius:999px;
+  color:var(--mut);font:600 10.5px var(--pl-mono);letter-spacing:0;
+}
+.pl-topbar .fg-curr-toggle:hover,
+.pl-topbar .fg-curr-wrap.open .fg-curr-toggle{
+  background:var(--sunk);border-color:var(--line2);color:var(--txt);
+}
+.pl-topbar .fg-curr-globe{ width:11px;height:11px;opacity:1; }
+.pl-topbar .fg-curr-flag{ font-size:12px; }
+.pl-topbar .fg-curr-label{
+  font:600 10.5px var(--pl-mono);letter-spacing:0;
+  max-width:92px;overflow:hidden;text-overflow:ellipsis;
+}
+.pl-topbar .fg-curr-chevron{ width:9px;height:9px; }
+.pl-topbar .fg-curr-menu{
+  font-family:var(--font);border-radius:14px 4px 14px 4px;
+  left:0;right:auto;
+  width:260px;max-width:calc(100vw - 16px);box-sizing:border-box;
+}
+html[dir="rtl"] .pl-topbar .fg-curr-menu{ left:auto;right:0; }
+.pl-topbar .fg-curr-item-rate{ color:var(--mut); }
+.pl-topbar .fg-curr-item.active .fg-curr-item-rate{ color:var(--txt); }
+.pl-topbar .fg-curr-price-line{
+  color:var(--mut);background:var(--sunk);border-color:var(--line);
+}
+.pl-topbar .fg-curr-item-name{ display:none; }
+
+.pl-theme-chip{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:26px;height:26px;padding:0;
+  border:1px solid var(--line);border-radius:999px;background:var(--sunk);
+  color:var(--txt);transition:color .15s,border-color .15s;
+}
+.pl-theme-chip:hover{ border-color:var(--line2); }
+.pl-theme-chip svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pl-theme-chip .ic-sun{ display:none; }
+html[data-theme="light"] .pl-theme-chip .ic-moon{ display:none; }
+html[data-theme="light"] .pl-theme-chip .ic-sun{ display:block; }
+
+.pl-topbar .fg-i18n-switcher{ font-family:inherit; }
+.pl-topbar .fg-i18n-toggle{
+  height:26px;padding:0 10px;gap:5px;
+  background:var(--sunk);border:1px solid var(--line);border-radius:999px;
+  color:var(--mut);font:600 10.5px var(--pl-mono);letter-spacing:0;
+}
+.pl-topbar .fg-i18n-toggle:hover,
+.pl-topbar .fg-i18n-switcher.is-open .fg-i18n-toggle{
+  background:var(--sunk);border-color:var(--line2);color:var(--txt);
+}
+.pl-topbar .fg-i18n-globe{ display:none; }
+.pl-topbar .fg-i18n-cur-flag{ font-size:12px; }
+.pl-topbar .fg-i18n-cur-label{
+  font:600 10.5px var(--pl-mono);letter-spacing:0;max-width:60px;
+  overflow:hidden;text-overflow:ellipsis;
+}
+.pl-topbar .fg-i18n-chev{ width:9px;height:9px; }
+.pl-topbar .fg-i18n-menu{ font-family:var(--font); }
+
+.pl-header{
+  text-align:center;padding:26px 30px 22px;border-bottom:1px solid var(--line);
+  background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(184,35,52,.10), transparent 70%);
+}
+
+.pl-mark span{font:700 22px var(--pl-mono);color:#fff}
+.pl-title{font-size:17px;font-weight:700;line-height:1.3;color:var(--txt)}
+.pl-desc{font-size:12.5px;color:var(--mut);line-height:1.6;margin-top:5px;max-width:320px;margin-inline:auto}
+
+.zone{padding:22px 30px 4px;text-align:center}
+.amt-num{font:700 clamp(30px,8vw,40px)/1 var(--pl-mono);letter-spacing:-1px;color:var(--txt)}
+.amt-num-unit{font:700 clamp(15px,4vw,20px)/1 var(--pl-mono);letter-spacing:-.5px;color:var(--mut)}
+.amt-unit{font:700 10px var(--pl-mono);letter-spacing:2px;color:var(--mut);text-transform:uppercase;margin-top:6px}
+.equiv{
+  display:inline-flex;align-items:center;gap:6px;margin-top:12px;
+  font:600 12px var(--pl-mono);color:var(--mut);
+  background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:999px;padding:5px 14px;
+  min-height:28px;transition:color .2s;
+}
+html[data-theme="light"] .equiv{ background:rgba(0,0,0,.03); }
+.equiv.loading{ font:400 12px var(--font); }
+.equiv b{color:var(--txt);font-weight:600}
+.equiv svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0}
+
+.field{position:relative;margin-bottom:10px;text-align:left}
+html[dir="rtl"] .field{ text-align:right; }
+.field .ic{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--dim);display:flex;pointer-events:none}
+html[dir="rtl"] .field .ic{ left:auto; right:13px; }
+.field .ic svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.field .ic svg path[fill]{fill:var(--dim) !important;stroke:none}
+.amount-field .ic svg{width:21px;height:21px}
+
+.anon-toggle{
+  display:flex;align-items:flex-start;gap:8px;margin:0 0 14px;cursor:pointer;
+  font-size:11.5px;color:var(--mut);line-height:1.5;
+}
+.anon-toggle input{
+  margin-top:2px;width:15px;height:15px;flex-shrink:0;accent-color:var(--ruby2);cursor:pointer;
+}
+.pl-card .finput{
+  width:100%;height:48px;background:var(--sunk);border:1px solid var(--line2);
+  border-radius:12px;color:var(--txt);font-size:13.5px;font-family:var(--pl-font);
+  padding:0 14px 0 40px;outline:none;
+  transition:border-color .2s, box-shadow .2s;
+}
+html[dir="rtl"] .pl-card .finput{ padding:0 40px 0 14px; }
+.pl-card .finput:focus{border-color:var(--mut)}
+.pl-card .finput.err{border-color:var(--ruby2);animation:pl-shake .35s cubic-bezier(.36,.07,.19,.97)}
+@keyframes pl-shake{20%{transform:translateX(-5px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+.pl-card .finput::placeholder{color:var(--dim)}
+.amount-field .finput{font:600 19px var(--pl-mono);height:54px;padding-inline-end:64px;padding-inline-start:40px}
+.amount-field .suffix{
+  position:absolute;right:13px;top:50%;transform:translateY(-50%);
+  font:700 10px var(--pl-mono);letter-spacing:1.5px;color:var(--dim);pointer-events:none;
+}
+html[dir="rtl"] .amount-field .suffix{ right:auto; left:13px; }
+
+.note-field .ic{ top:16px; transform:none; }
+.note-field textarea.finput{
+  height:48px;min-height:48px;max-height:160px;
+  padding-top:14px;padding-bottom:14px;line-height:1.4;
+  resize:none;overflow:hidden;
+}
+.note-field .note-count{
+  position:absolute;right:12px;bottom:8px;
+  font:600 9.5px var(--pl-mono);color:var(--dim);pointer-events:none;
+  transition:color .15s;
+}
+html[dir="rtl"] .note-field .note-count{ right:auto; left:12px; }
+.note-field .note-count.near-limit{ color:var(--exp-txt); }
+.note-field .note-count.at-limit{ color:var(--err-txt); }
+
+.quick{display:flex;gap:7px;justify-content:center;margin:2px 0 4px;flex-wrap:wrap}
+.q{
+  height:30px;padding:0 13px;border-radius:999px;background:var(--sunk);
+  border:1px solid var(--line);color:var(--mut);font:600 11.5px var(--pl-mono);
+  transition:all .18s;
+}
+.q:hover{border-color:var(--line2);color:var(--txt)}
+.q.on{background:var(--ruby-soft);border-color:var(--ruby2);color:var(--txt)}
+
+.sep{margin:18px 30px 0;height:1px;background:var(--line)}
+.pl-body{padding:18px 30px 22px}
+#pl-alert:not(:empty){margin-bottom:14px}
+
+.alert{
+  display:flex;gap:9px;align-items:flex-start;border-radius:12px;padding:11px 14px;
+  font-size:12.5px;line-height:1.55;border:1px solid;font-family:var(--font);
+  animation:pl-aIn .3s cubic-bezier(.2,.9,.3,1);
+}
+@keyframes pl-aIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.alert svg{width:14px;height:14px;flex-shrink:0;margin-top:1px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.alert.err{background:var(--ruby-soft);border-color:rgba(184,35,52,.4);color:var(--err-txt)}
+.alert.neutral{background:var(--sunk);border-color:var(--line2);color:var(--mut)}
+
+.paybtn{
+  width:100%;height:50px;display:flex;align-items:center;justify-content:center;gap:9px;
+  background:linear-gradient(140deg,var(--ruby2),var(--ruby));color:#fff;border:none;border-radius:13px;
+  font-size:14px;font-weight:700;letter-spacing:.2px;font-family:var(--pl-font);
+  box-shadow:0 10px 26px -8px rgba(184,35,52,.5);
+  transition:filter .18s, transform .12s, box-shadow .2s;
+}
+.paybtn svg{width:17px;height:17px;flex-shrink:0}
+.paybtn:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 14px 32px -8px rgba(184,35,52,.6)}
+.paybtn:active:not(:disabled){transform:translateY(0)}
+.paybtn:disabled{opacity:.7;cursor:default}
+.pl-spin{
+  width:16px;height:16px;border-radius:50%;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:pl-rot .7s linear infinite;
+}
+@keyframes pl-rot{to{transform:rotate(360deg)}}
+
+.trust{
+  display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;
+  font-size:11px;color:var(--dim);letter-spacing:.2px;font-family:var(--font);
+}
+.trust svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+.pl-foot{
+  padding:11px 30px;border-top:1px solid var(--line);background:rgba(0,0,0,.18);
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  border-radius:0 0 22px 22px;
+}
+html[data-theme="light"] .pl-foot{ background:rgba(0,0,0,.03); }
+.pl-foot span{font:600 10px var(--pl-mono);letter-spacing:1px;color:var(--dim)}
+.pl-foot b{color:var(--mut)}
+
+.state{display:none;flex-direction:column;align-items:center;text-align:center;padding:6px 0 10px}
+.state.show{display:flex;animation:pl-aIn .35s cubic-bezier(.2,.9,.3,1)}
+.state .ring{width:88px;height:88px;margin-bottom:14px}
+.state .ring circle{fill:none;stroke:currentColor;stroke-width:3;stroke-dasharray:320;stroke-dashoffset:320;
+  transform:rotate(-90deg);transform-origin:60px 60px}
+.state.show .ring circle{animation:pl-draw .7s cubic-bezier(.5,0,.3,1) forwards .05s}
+@keyframes pl-draw{to{stroke-dashoffset:0}}
+.state .ring path,.state .ring line{fill:none;stroke:currentColor;stroke-width:5.5;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:56;stroke-dashoffset:57.5}
+.state.show .ring .p1{animation:pl-draw2 .3s cubic-bezier(.4,0,.2,1) forwards .6s}
+.state.show .ring .p2{animation:pl-draw2 .3s cubic-bezier(.4,0,.2,1) forwards .82s}
+@keyframes pl-draw2{to{stroke-dashoffset:0}}
+.state.cancel{color:var(--err-txt)}
+.state.locked{color:var(--mut)}
+.state.expired{color:var(--exp-txt)}
+.state h3{font-size:15px;font-weight:700;color:var(--txt);margin-bottom:6px;font-family:var(--pl-font)}
+.state p{font-size:12.5px;color:var(--mut);line-height:1.6;max-width:290px;margin-bottom:16px;font-family:var(--font)}
+.ghostbtn{
+  height:38px;padding:0 20px;border-radius:10px;background:none;
+  border:1px solid var(--line2);color:var(--txt);font-size:12.5px;font-weight:600;font-family:var(--pl-font);
+  transition:border-color .2s;
+}
+.ghostbtn:hover{border-color:var(--mut)}
+
+@media (max-width:480px){
+  .pl-wrap{padding:0 0 92px;align-items:flex-start}
+  .pl-card{max-width:100%;border-radius:0;border-left:none;border-right:none;border-top:none;min-height:100dvh}
+  .pl-topbar{padding:9px 14px;border-radius:0}
+  .pl-header{padding:24px 20px 20px}
+  .zone{padding:20px 20px 4px}
+  .sep{margin:16px 20px 0}
+  .pl-body{padding:16px 20px 22px}
+  .pl-foot{padding:11px 20px;border-radius:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .pl-card *{animation-duration:.01ms !important}
+}
+</style>
+
+<link rel="stylesheet" href="/static/css/demo.css?v=b46a8f31ed"><script src="/static/js/demo.js?v=0a33102c01" defer></script></head>
+<body class="">
+  
+  <div id="site-bg" aria-hidden="true"></div>
+
+  
+
+  <div id="page-wrap">
+    
+<div class="pl-wrap">
+  <div class="pl-card">
+
+    <div class="pl-topbar">
+      <div class="pl-topbar-l">
+        <div data-currency-switcher="compact" id="pl-currency-mount" style="display:none"></div>
+      </div>
+      <div class="pl-topbar-r">
+        <button type="button" class="chip pl-theme-chip" id="pl-theme-toggle" aria-label="Toggle dark / light theme">
+          <svg class="ic-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/></svg>
+          <svg class="ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </button>
+        <div class="fg-i18n-mount" data-i18n-switcher="compact"></div>
+      </div>
+    </div>
+
+    <div class="pl-header">
+
+      <h2 class="pl-title" id="linkTitle">@@TITLE@@</h2>
+      
+      <p class="pl-desc" id="linkDesc">@@DESC@@</p>
+      
+    </div>
+
+    
+    <div class="zone" id="zoneFixed">
+      <div class="amt-num">7777.123 <span class="amt-num-unit">Firo</span></div>
+      <div class="amt-unit">FIRO · Fixed amount</div>
+      <div id="pl-equiv-wrap" style="display:none">
+        <span class="equiv loading" id="pl-equiv-price">
+
+          <span id="pl-equiv-loading-txt">Loading price…</span>
+        </span>
+      </div>
+    </div>
+    
+
+    <div class="sep"></div>
+
+    <div class="pl-body">
+      <div id="pl-alert"></div>
+
+      <div class="state cancel" id="stCancel">
+        <h3 id="stCancelTitle">Payment cancelled</h3>
+        <p id="stCancelDesc">Changed your mind? You can start a new payment whenever you're ready.</p>
+        <button type="button" class="ghostbtn" id="pl-try-again">Try again</button>
+      </div>
+      <div class="state locked" id="stLocked">
+        <svg class="ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="50"/><path class="p1" d="M46 60v-8a14 14 0 0128 0v8" style="stroke-dasharray:62;stroke-dashoffset:63.5"/><path class="p2" d="M44 60h32v22H44z" style="stroke-dasharray:110;stroke-dashoffset:111.5"/></svg>
+        <h3 id="stLockedTitle">This link is no longer active</h3>
+        <p id="stLockedDesc">The merchant has closed this payment link. If you believe this is a mistake, contact them directly.</p>
+      </div>
+      <div class="state expired" id="stExpired">
+        <svg class="ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="50"/><path class="p1" d="M60 38v24" style="stroke-dasharray:30;stroke-dashoffset:31.5"/><path class="p2" d="M60 62l16 10" style="stroke-dasharray:26;stroke-dashoffset:27.5"/></svg>
+        <h3 id="stExpiredTitle">This link has expired</h3>
+        <p id="stExpiredDesc">The payment window for this link has closed. Ask the merchant for a fresh link.</p>
+      </div>
+
+      <div id="pl-form">
+        
+        <div class="field" id="pl-email-field" style="margin-bottom:8px">
+          <span class="ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 5l10 8 10-8"/></svg></span>
+          <input type="email" id="pl-email" class="finput" placeholder="your@email.com" data-i18n-placeholder="your@email.com" autocomplete="email" aria-label="Email address">
+        </div>
+        <label class="anon-toggle" id="pl-anon-label">
+          <input type="checkbox" id="pl-anon">
+          <span id="pl-anon-txt">Pay anonymously </span>
+        </label>
+        
+
+        <div class="field note-field" id="pl-note-field" style="margin-bottom:14px">
+          <span class="ic"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
+          <textarea id="pl-note" class="finput" placeholder="Say something (optional)" data-i18n-placeholder="Say something (optional)" maxlength="280" rows="1" aria-label="Note to the merchant"></textarea>
+          <span class="note-count" id="pl-note-count">280</span>
+        </div>
+
+        <button type="button" class="paybtn" id="pl-btn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 18.857a6.858 6.858 0 0 0 6.36-9.429h-3.34a.43.43 0 0 0-.373.219l-.591 1.067h1.371a.43.43 0 0 1 .429.429v1.285a.43.43 0 0 1-.428.429h-2.572l-2.036 3.639a.43.43 0 0 1-.373.218H7.02A6.84 6.84 0 0 0 12 18.857M5.64 14.57a6.857 6.857 0 0 1 11.34-7.286h-3.214a.43.43 0 0 0-.373.22l-1.796 3.209H9a.43.43 0 0 0-.429.429v1.285a.43.43 0 0 0 .429.429h1.4l-.835 1.496a.43.43 0 0 1-.373.218z"/></svg>
+          <span id="pl-btn-txt">Pay with Firo</span>
+        </button>
+
+        <div class="trust">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <span id="pl-trust-txt">Non-custodial paid directly to the merchant's wallet</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pl-foot"><span>POWERED BY <b>FIROGATE</b></span></div>
+  </div>
+</div>
+
+  </div>
+
+  
+  <footer id="site-footer">
+    <div class="footer-inner">
+
+      <div class="footer-top">
+
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/about" class="footer-link">About</a>
+          <a href="/docs" class="footer-link">API Docs</a>
+        </nav>
+
+        <div class="footer-social">
+          <a href="https://github.com/firoorg" class="footer-icon-link" target="_blank" rel="noopener noreferrer" aria-label="FiroOrg on GitHub">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+            </svg>
+          </a>
+          <a href="https://gitlab.com/firoorg" class="footer-icon-link" target="_blank" rel="noopener noreferrer" aria-label="FiroOrg on GitLab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M23.955 13.587l-1.342-4.135-2.664-8.189a.455.455 0 0 0-.867 0L16.418 9.45H7.582L4.918 1.263a.455.455 0 0 0-.867 0L1.386 9.452.044 13.587a.924.924 0 0 0 .331 1.023L12 23.054l11.625-8.443a.92.92 0 0 0 .33-1.024"/>
+            </svg>
+          </a>
+          <a href="https://stackwallet.com" class="footer-icon-link" target="_blank" rel="noopener noreferrer" aria-label="Stack Wallet" title="Stack Wallet">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+          </a>
+          <a href="https://firo.org/2024/07/12/campfire-firo-wallet.html" class="footer-icon-link" target="_blank" rel="noopener noreferrer" aria-label="Campfire Wallet" title="Campfire Wallet">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M12 22c-2 0-7-2-7-8 0-3 1.5-5 3-6.5S12 4 12 2c0 2 2.5 3.5 4 5.5S19 11 19 14c0 6-5 8-7 8z" fill="currentColor" opacity=".15"/>
+              <path d="M12 22c-2 0-7-2-7-8 0-3 1.5-5 3-6.5S12 4 12 2c0 2 2.5 3.5 4 5.5S19 11 19 14c0 6-5 8-7 8z"/>
+              <path d="M12 22c-1 0-4-1-4-5 0-2 1-3 2-4s2-2 2-3c0 1 1 2 2 3s2 2 2 4c0 4-3 5-4 5z"/>
+            </svg>
+          </a>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <span class="footer-copy">&#169; 2026</span>
+        <div class="footer-right">
+          <div data-theme-toggle-mount style="display:inline-flex;vertical-align:middle"></div>
+          <div class="fg-i18n-mount fg-i18n-dropup" data-i18n-switcher="compact" data-testid="footer-i18n-switcher"></div>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <style>
+    #site-footer {
+      position: relative;
+      z-index: 2;
+      border-top: 1px solid rgba(255,255,255,.06);
+      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.35) 100%);
+      padding: 0 22px;
+    }
+
+    #site-footer::before {
+      content: '';
+      display: block;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(var(--brand-rgb),.15), transparent);
+      margin-bottom: 0;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 0 16px;
+    }
+
+    .footer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px 24px;
+      flex-wrap: wrap;
+      padding-bottom: 14px;
+    }
+
+    .footer-nav {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px 20px;
+    }
+
+    .footer-social { display: flex; align-items: center; gap: 8px; }
+    .footer-icon-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px 4px 6px 4px;
+      border: 1px solid rgba(255,255,255,.06);
+      background: rgba(255,255,255,.03);
+      color: var(--t3);
+      text-decoration: none;
+      transition: color var(--t), border-color var(--t), background var(--t), transform var(--t);
+      flex-shrink: 0;
+    }
+    .footer-icon-link:hover {
+      color: var(--y);
+      border-color: rgba(var(--brand-rgb),.25);
+      background: rgba(var(--brand-rgb),.07);
+      transform: translateY(-2px);
+    }
+
+    .footer-link {
+      font-size: .8rem;
+      font-weight: 500;
+      color: var(--t1);
+      text-decoration: none;
+      letter-spacing: .01em;
+      transition: color var(--t);
+    }
+    .footer-link:hover { color: var(--y); }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-copy {
+      font-size: .72rem;
+      color: var(--t1);
+      font-weight: 500;
+      letter-spacing: .02em;
+      white-space: nowrap;
+    }
+
+    body:has(.layout) #site-footer { display: none; }
+
+    @media (max-width: 640px) {
+      .footer-top {
+        justify-content: center;
+        text-align: center;
+        gap: 12px 16px;
+      }
+      .footer-nav { justify-content: center; gap: 4px 14px; }
+      .footer-bottom { padding-bottom: max(4px, env(safe-area-inset-bottom)); }
+    }
+  </style>
+
+  <div id="tc"></div>
+  
+  <script>
+    window.DASHBOARD_URL = "/dashboard/";
+    window.LOGIN_URL     = "/";
+    window.CHECKOUT_URL  = "";
+    window.API_BASE      = "";
+  </script>
+  <script src="/static/js/app.js?v=aa9f85ccd2"></script>
+  <script src="/static/js/sb-nav-tree.js?v=9a2649785b"></script>
+  <script src="/static/js/tips.js?v=c95c284bfc"></script>
+  <script>
+    (function(){
+      function mount(){
+        if (window.i18n && typeof window.i18n.mountSwitchers === 'function') {
+          try { window.i18n.mountSwitchers(); } catch(_) {}
+          try { window.i18n.translate(document.body); } catch(_) {}
+        }
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', mount);
+      } else { mount(); }
+      setTimeout(mount, 250);
+      setTimeout(mount, 1000);
+    })();
+  </script>
+  
+<script>
+var LINK_SLUG     = "@@SLUG@@";
+var LINK_FIXED    = true;
+var LINK_AMOUNT   = 7777.123;
+var COLLECT_EMAIL = true;
+var SHOW_MARKET_PRICE = false;
+var SESSION_KEY   = 'pl_cancelled_' + LINK_SLUG;
+
+function _t(s) { return (window.t && window.t(s) !== s) ? window.t(s) : s; }
+
+function translateStaticStrings() {
+  var map = {
+    'pl-equiv-loading-txt': 'Loading price…',
+    'stCancelTitle':  'Payment cancelled',
+    'stCancelDesc':   "Changed your mind? You can start a new payment whenever you're ready.",
+    'pl-try-again':   'Try again',
+    'stLockedTitle':  'This link is no longer active',
+    'stLockedDesc':   'The merchant has closed this payment link. If you believe this is a mistake, contact them directly.',
+    'stExpiredTitle': 'This link has expired',
+    'stExpiredDesc':  'The payment window for this link has closed. Ask the merchant for a fresh link.',
+    'pl-btn-txt':     'Pay with Firo',
+    'pl-trust-txt':   "Non-custodial paid directly to the merchant's wallet",
+    'pl-anon-txt':    "Pay anonymously",
+  };
+  Object.keys(map).forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = _t(map[id]);
+  });
+}
+document.addEventListener('i18n:ready', translateStaticStrings);
+if (document.readyState !== 'loading') translateStaticStrings();
+else document.addEventListener('DOMContentLoaded', translateStaticStrings);
+
+(function() {
+  var btn = document.getElementById('pl-theme-toggle');
+  if (btn) btn.addEventListener('click', function() {
+    if (window.toggleTheme) window.toggleTheme();
+  });
+})();
+
+var _plPrice  = null;
+var _priceInt = null;
+
+function fmtEquiv(firoAmt) {
+  if (window.FGCurrency && window.FGCurrency.isSelected()) {
+    return ' ' + window.FGCurrency.format(window.FGCurrency.convert(firoAmt * _plPrice));
+  }
+  return ' $' + (firoAmt * _plPrice).toFixed(2) + ' USD';
+}
+
+function updateEquiv() {
+  var el = document.getElementById('pl-equiv-price');
+  if (!el) return;
+  var firoAmt;
+  if (LINK_FIXED) {
+    firoAmt = LINK_AMOUNT;
+  } else {
+    var raw = ((document.getElementById('pl-custom-amount') || {}).value || '').trim()
+      .replace(/,/g, '.').replace(/[^0-9.]/g, '');
+    firoAmt = parseFloat(raw) || 0;
+    document.querySelectorAll('.q').forEach(function(q) {
+      q.classList.toggle('on', parseFloat(q.dataset.q) === firoAmt);
+    });
+  }
+  if (!firoAmt || firoAmt <= 0 || !_plPrice) {
+    if (!LINK_FIXED) el.style.visibility = 'hidden';
+    return;
+  }
+  var display = fmtEquiv(firoAmt);
+  if (LINK_FIXED) {
+    el.classList.remove('loading');
+    el.innerHTML = '<b>' + display + '</b>';
+  } else {
+    var tx = document.getElementById('pl-equiv-text');
+    if (tx) tx.textContent = display;
+    el.style.visibility = 'visible';
+  }
+}
+
+async function loadPrice() {
+  if (!SHOW_MARKET_PRICE || document.hidden) return;
+  try {
+    var r = await fetch('/api/price?fresh=true');
+    var d = r.ok ? await r.json() : null;
+    if (d && d.price) { _plPrice = parseFloat(d.price); updateEquiv(); }
+    else if (!_plPrice) hidePrice();
+  } catch (_) { if (!_plPrice) hidePrice(); }
+}
+function hidePrice() {
+  var w = document.getElementById('pl-equiv-wrap');
+  if (w) w.style.display = 'none';
+}
+function startPriceLoop() {
+  if (!SHOW_MARKET_PRICE) return;
+  loadPrice();
+  _priceInt = setInterval(loadPrice, 180000);
+}
+function stopPriceLoop() {
+  if (_priceInt) { clearInterval(_priceInt); _priceInt = null; }
+}
+document.addEventListener('visibilitychange', function() {
+  if (!SHOW_MARKET_PRICE) return;
+  if (document.hidden) stopPriceLoop();
+  else { loadPrice(); if (!_priceInt) _priceInt = setInterval(loadPrice, 180000); }
+});
+window.addEventListener('beforeunload', stopPriceLoop);
+document.addEventListener('fg:currency-changed', updateEquiv);
+
+(function() {
+  var input = document.getElementById('pl-custom-amount');
+  var quick = document.getElementById('pl-quick');
+  if (input) input.addEventListener('input', updateEquiv);
+  if (quick) quick.addEventListener('click', function(e) {
+    var q = e.target.closest('.q');
+    if (!q || !input) return;
+    input.value = q.dataset.q;
+    updateEquiv();
+  });
+})();
+
+var ALERT_ICONS = {
+  err:     '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5h.01"/></svg>',
+  neutral: '<svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>',
+};
+function showAlert(msg, type) {
+  var ab = document.getElementById('pl-alert');
+  if (!ab) return;
+  ab.innerHTML = '<div class="alert ' + type + '">' + (ALERT_ICONS[type] || ALERT_ICONS.neutral) +
+    '<span></span></div>';
+  ab.querySelector('.alert span').textContent = msg;
+}
+function clearAlert() {
+  var ab = document.getElementById('pl-alert');
+  if (ab) ab.innerHTML = '';
+}
+
+function hideStates() {
+  document.querySelectorAll('.state').forEach(function(s) { s.classList.remove('show'); });
+}
+function resetToForm() {
+  hideStates();
+  clearAlert();
+  var form = document.getElementById('pl-form');
+  if (form) form.style.display = '';
+}
+function showState(id) {
+  resetToForm();
+  var form = document.getElementById('pl-form');
+  if (form) form.style.display = 'none';
+  var st = document.getElementById(id);
+  if (!st) return;
+  st.classList.remove('show');
+  void st.getBoundingClientRect();
+  st.classList.add('show');
+}
+
+function resetPayButton() {
+  var btn = document.getElementById('pl-btn');
+  var txt = document.getElementById('pl-btn-txt');
+  if (!btn) return;
+  btn.disabled = false;
+  var spin = btn.querySelector('.pl-spin');
+  if (spin) spin.remove();
+  var svg = btn.querySelector('svg');
+  if (svg) svg.style.display = '';
+  if (txt) txt.textContent = _t('Pay with Firo');
+}
+
+function tryAgain() {
+  try { sessionStorage.removeItem(SESSION_KEY); } catch (_) {}
+  resetToForm();
+  resetPayButton();
+  updateEquiv();
+}
+(function() {
+  var btn = document.getElementById('pl-try-again');
+  if (btn) btn.addEventListener('click', tryAgain);
+})();
+
+(function checkSession() {
+  var params = new URLSearchParams(window.location.search);
+  function doCheck() {
+    if (params.get('cancelled') === '1') {
+      try { sessionStorage.setItem(SESSION_KEY, '1'); } catch (_) {}
+      showState('stCancel');
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+      return;
+    }
+    var was = false;
+    try { was = sessionStorage.getItem(SESSION_KEY) === '1'; } catch (_) {}
+    if (was) showState('stCancel');
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener('i18n:ready', doCheck, { once: true });
+      setTimeout(doCheck, 400);
+    });
+  } else {
+    document.addEventListener('i18n:ready', doCheck, { once: true });
+    setTimeout(doCheck, 400);
+  }
+})();
+
+async function startPLPayment() {
+  clearAlert();
+  var btn = document.getElementById('pl-btn');
+  var txt = document.getElementById('pl-btn-txt');
+
+  var amount;
+  if (LINK_FIXED) {
+    amount = LINK_AMOUNT;
+  } else {
+    var rawVal = ((document.getElementById('pl-custom-amount') || {}).value || '').trim()
+      .replace(/,/g, '.').replace(/[^0-9.]/g, '');
+    amount = parseFloat(rawVal);
+  }
+
+  var MIN_AMOUNT = 0.01;
+  if (!amount || isNaN(amount) || amount < MIN_AMOUNT) {
+    showAlert(_t('Please enter a valid amount (min 0.01 FIRO).'), 'err');
+    var inp = document.getElementById('pl-custom-amount');
+    if (inp) {
+      inp.classList.remove('err');
+      void inp.getBoundingClientRect();
+      inp.classList.add('err');
+      inp.focus();
+      setTimeout(function() { inp.classList.remove('err'); }, 1600);
+    }
+    return;
+  }
+
+  var anonEl  = document.getElementById('pl-anon');
+  var isAnon  = anonEl ? anonEl.checked : false;
+  var emailEl = document.getElementById('pl-email');
+  var email   = (!isAnon && emailEl) ? emailEl.value.trim() : '';
+  if (COLLECT_EMAIL && !isAnon && !email) {
+    showAlert(_t('Please enter your email address, or check "Pay anonymously".'), 'err');
+    return;
+  }
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showAlert(_t('Please enter a valid email address.'), 'err');
+    return;
+  }
+
+  var noteEl = document.getElementById('pl-note');
+  var note   = noteEl ? noteEl.value.trim().slice(0, 280) : '';
+
+  btn.disabled = true;
+  var svg = btn.querySelector('svg');
+  if (svg) svg.style.display = 'none';
+  btn.insertAdjacentHTML('afterbegin', '<span class="pl-spin"></span>');
+  if (txt) txt.textContent = _t('Creating your invoice…');
+
+  try {
+    var res  = await fetch('/api/payment-links/public/' + LINK_SLUG + '/checkout', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount_firo: amount, customer_email: email || null, note: note || null }),
+    });
+    var data = await res.json().catch(function() { return {}; });
+
+    if (!res.ok) {
+      var msg = data.detail || _t('Failed to create payment. Please try again.');
+      if (res.status === 404) {
+        showState('stLocked');
+      } else if (res.status === 410) {
+        var isExpired = /expired/i.test(String(data.detail || ''));
+        showState(isExpired ? 'stExpired' : 'stLocked');
+      } else {
+        showAlert(msg, 'err');
+      }
+      resetPayButton();
+      return;
+    }
+
+    var checkoutUrl = (data.checkout_url || '').trim();
+    var isValidCheckoutUrl = /^https:\/\//.test(checkoutUrl) ||
+      (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//.test(checkoutUrl));
+    if (checkoutUrl && isValidCheckoutUrl) {
+      if (txt) txt.textContent = _t('Redirecting…');
+      window.location.href = checkoutUrl;
+    } else {
+      showAlert(_t('Invalid checkout URL received.'), 'err');
+      resetPayButton();
+    }
+  } catch (e) {
+    showAlert(_t('Network error. Please try again.'), 'err');
+    resetPayButton();
+  }
+}
+(function() {
+  var btn = document.getElementById('pl-btn');
+  if (btn) btn.addEventListener('click', startPLPayment);
+})();
+
+(function() {
+  var anon  = document.getElementById('pl-anon');
+  var email = document.getElementById('pl-email');
+  if (!anon || !email) return;
+  anon.addEventListener('change', function() {
+    email.disabled = anon.checked;
+    if (anon.checked) email.value = '';
+    email.style.opacity = anon.checked ? '.4' : '';
+  });
+})();
+
+(function() {
+  var NOTE_MAX = 280;
+  var note  = document.getElementById('pl-note');
+  var count = document.getElementById('pl-note-count');
+  if (!note) return;
+  function resize() {
+    note.style.height = 'auto';
+    note.style.height = note.scrollHeight + 'px';
+  }
+  function updateCount() {
+    if (!count) return;
+    var left = NOTE_MAX - note.value.length;
+    count.textContent = left;
+    count.classList.toggle('near-limit', left <= 40 && left > 10);
+    count.classList.toggle('at-limit', left <= 10);
+  }
+  note.addEventListener('input', function() { resize(); updateCount(); });
+  updateCount();
+})();
+
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter') return;
+  if (e.target && e.target.id === 'pl-note') return;
+  var form = document.getElementById('pl-form');
+  var btn  = document.getElementById('pl-btn');
+  if (form && form.style.display !== 'none' && btn && !btn.disabled) startPLPayment();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  var mount = document.getElementById('pl-currency-mount');
+  if (mount) {
+    if (SHOW_MARKET_PRICE && window.FGCurrency) window.FGCurrency.mount(mount, { variant: 'compact' });
+    else mount.style.display = 'none';
+  }
+  startPriceLoop();
+});
+</script>
+
+  <script>
+  (function () {
+    var KEY = 'firo-theme';
+    var mql = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
+
+    function stored() {
+      try { return localStorage.getItem(KEY) || 'dark'; } catch (e) { return 'dark'; }
+    }
+    function effective(mode) {
+      if (mode === 'system') return (mql && mql.matches) ? 'light' : 'dark';
+      return mode;
+    }
+    function paint(mode, animate) {
+      var root = document.documentElement;
+      if (animate) {
+        root.classList.add('theme-anim');
+        setTimeout(function () { root.classList.remove('theme-anim'); }, 400);
+      }
+      if (effective(mode) === 'light') root.setAttribute('data-theme', 'light');
+      else root.removeAttribute('data-theme');
+      document.querySelectorAll('[data-theme-switch]').forEach(function (sw) {
+        sw.querySelectorAll('[data-theme-opt]').forEach(function (b) {
+          var on = b.getAttribute('data-theme-opt') === mode;
+          b.setAttribute('aria-checked', on ? 'true' : 'false');
+          b.style.background = on ? 'var(--bg0)' : 'transparent';
+          b.style.color      = on ? 'var(--y)'   : 'var(--t3)';
+          b.style.boxShadow  = on ? '0 1px 3px rgba(0,0,0,.18)' : 'none';
+        });
+      });
+    }
+    function setMode(mode) {
+      try { localStorage.setItem(KEY, mode); } catch (e) {}
+      paint(mode, true);
+    }
+    window.__setTheme = setMode;
+    window.toggleTheme = function () { setMode(effective(stored()) === 'light' ? 'dark' : 'light'); };
+
+    paint(stored(), false);
+    if (mql) {
+      var onOS = function () { if (stored() === 'system') paint('system', true); };
+      if (mql.addEventListener) mql.addEventListener('change', onOS);
+      else if (mql.addListener) mql.addListener(onOS);
+    }
+
+    var ICON = {
+      light: '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 15.3V14.7M2.8 13.2l.47-.47M.67 8h.66M2.8 2.8l.47.47M8 1.3V.67M12.7 3.3l.47-.47M14.7 8h.66M12.7 12.7l.47.47M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"/></svg>',
+      system:'<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M13.76 10.24V5.63c0-1.07 0-1.61-.21-2.02a1.9 1.9 0 0 0-.84-.84c-.41-.21-.95-.21-2.02-.21H5.31c-1.07 0-1.61 0-2.02.21-.36.18-.65.48-.84.84-.21.41-.21.95-.21 2.02v4.61M13.76 10.24H2.24M13.76 10.24c.35 0 .64.29.64.64 0 1.06-.86 1.92-1.92 1.92H3.52c-1.06 0-1.92-.86-1.92-1.92 0-.35.29-.64.64-.64"/></svg>',
+      dark:  '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 7.98A4.33 4.33 0 0 1 10.33 10 4.33 4.33 0 0 1 6 5.67 4.33 4.33 0 0 1 8.02 2 6 6 0 1 0 14 7.98Z"/></svg>'
+    };
+    function optBtn(mode, label) {
+      return '<button type="button" role="radio" data-theme-opt="' + mode + '" title="' + label + '" aria-label="' + label + '" ' +
+        'onclick="__setTheme(\'' + mode + '\')" ' +
+        'style="flex:1;display:flex;align-items:center;justify-content:center;height:26px;border:none;border-radius:14px;' +
+        'background:transparent;color:var(--t3);cursor:pointer;transition:background .2s,color .2s;">' + ICON[mode] + '</button>';
+    }
+    function switchHTML() {
+      return '<div data-theme-switch role="radiogroup" aria-label="Theme" ' +
+        'style="display:flex;align-items:center;gap:2px;height:32px;padding:3px;border-radius:18px;' +
+        'background:var(--bg3);border:1px solid var(--bw);width:104px;">' +
+        optBtn('light','Light') + optBtn('system','System') + optBtn('dark','Dark') +
+        '</div>';
+    }
+    function mount() {
+      document.querySelectorAll('[data-theme-toggle-mount]').forEach(function (el) {
+        if (el.querySelector('[data-theme-switch]')) return;
+        el.innerHTML = switchHTML();
+      });
+      paint(stored(), false);
+    }
+    window.__mountThemeSwitch = mount;
+    if (document.readyState !== 'loading') mount();
+    else document.addEventListener('DOMContentLoaded', mount);
+    setTimeout(mount, 800);
+  })();
+  </script>
+</body>
+</html>

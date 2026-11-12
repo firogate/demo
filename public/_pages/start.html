@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FiroGate Demo</title>
+<meta name="description" content="Try FiroGate in your browser. No real FIRO, nothing to install.">
+<link rel="icon" href="/static/favicon.ico">
+<link rel="preload" href="/static/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+  @font-face { font-family: "Inter"; font-weight: 400; font-display: swap; src: url("/static/fonts/inter-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Inter"; font-weight: 600; font-display: swap; src: url("/static/fonts/inter-latin-600-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Inter"; font-weight: 800; font-display: swap; src: url("/static/fonts/inter-latin-800-normal.woff2") format("woff2"); }
+  @font-face { font-family: "JetBrains Mono"; font-weight: 400; font-display: swap; src: url("/static/fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2"); }
+  :root {
+    --brand: #00A2A7; --accent: #2CC8CD; --bg: #0A0C0D; --surface: #121617; --border: rgba(255,255,255,.08); --border-2: rgba(255,255,255,.14);
+    --text: #F4F7F7; --text-2: #B9C2C4; --text-3: #7D888B;
+    --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg: #F6F8F8; --surface: #FFFFFF; --border: rgba(10,20,22,.09); --border-2: rgba(10,20,22,.16); --text: #0B1314; --text-2: #3A4648; --text-3: #6A7679; --accent: #007E83; }
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 6px; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+  .top { display: flex; align-items: center; justify-content: space-between; height: 64px; border-bottom: 1px solid var(--border); }
+  .brand { font-weight: 800; font-size: 1.1rem; letter-spacing: -.01em; }
+  .brand b { color: var(--accent); }
+  .brand span { margin-inline-start: 8px; padding: 3px 8px; border-radius: 20px; background: var(--brand); color: #fff; font-size: .7rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; vertical-align: 2px; }
+  .top nav { display: flex; gap: 4px; }
+  .top nav a { padding: 8px 12px; border-radius: 10px; font-size: .9rem; color: var(--text-2); }
+  .top nav a:hover { color: var(--text); background: var(--surface); }
+  .hero { text-align: center; padding: 80px 0 56px; }
+  h1 { margin: 0 auto 14px; max-width: 680px; font-size: clamp(2.2rem, 6vw, 3.8rem); line-height: 1.05; letter-spacing: -.035em; font-weight: 800; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .hero p { margin: 0 auto; max-width: 460px; color: var(--text-2); font-size: 1.1rem; }
+  .cta { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 30px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 50px; padding: 0 24px; border-radius: 14px; border: 1px solid transparent; font: 600 1rem var(--font); cursor: pointer; }
+  .btn-main { background: var(--brand); color: #fff; }
+  .btn-main:hover { background: #008C91; }
+  .btn-main:disabled { opacity: .6; cursor: default; }
+  .btn-line { background: var(--surface); border-color: var(--border-2); color: var(--text); }
+  .btn-line:hover { border-color: var(--text-3); }
+  .small { margin-top: 14px; font-size: .86rem; color: var(--text-3); }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .grid div { padding: 26px 20px; }
+  .grid div + div { border-inline-start: 1px solid var(--border); }
+  .grid b { display: block; font-size: 1.05rem; margin-bottom: 4px; }
+  .grid span { color: var(--text-3); font-size: .92rem; }
+  .api { padding: 64px 0 80px; display: grid; grid-template-columns: 1fr 1.3fr; gap: 40px; align-items: center; }
+  h2 { margin: 0 0 10px; font-size: clamp(1.6rem, 3.5vw, 2.2rem); letter-spacing: -.025em; line-height: 1.1; font-weight: 800; }
+  .api p { margin: 0; color: var(--text-2); }
+  .term { border: 1px solid var(--border-2); border-radius: 16px; background: #0B0F10; overflow: hidden; }
+  .term-bar { height: 40px; display: flex; align-items: center; padding: 0 16px; border-bottom: 1px solid rgba(255,255,255,.08); font: .74rem var(--mono); color: #7D888B; }
+  pre { margin: 0; padding: 18px; overflow-x: auto; font: .82rem/1.75 var(--mono); color: #E6EEEE; }
+  .k { color: #2CC8CD; } .c { color: #66777A; }
+  footer { border-top: 1px solid var(--border); padding: 28px 0 40px; color: var(--text-3); font-size: .88rem; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer a:hover { color: var(--text); }
+  .err { margin-top: 12px; color: #F2604F; font-size: .9rem; min-height: 1.2em; }
+  @media (max-width: 760px) {
+    .top nav a:not(:last-child) { display: none; }
+    .hero { padding: 56px 0 44px; }
+    .cta .btn { flex: 1 1 100%; }
+    .grid { grid-template-columns: 1fr; }
+    .grid div + div { border-inline-start: none; border-top: 1px solid var(--border); }
+    .api { grid-template-columns: 1fr; gap: 24px; padding: 48px 0 60px; }
+  }
+</style>
+</head>
+<body>
+<header class="wrap top">
+  <a class="brand" href="/">Firo<b>Gate</b><span>Demo</span></a>
+  <nav>
+    <a href="/docs">API docs</a>
+    <a href="https://github.com/firogate/firogate-ce" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+</header>
+
+<main>
+  <section class="wrap hero">
+    <h1>Try <em>FiroGate</em> in your browser.</h1>
+    <p>No real FIRO. Nothing to install. Your demo is deleted after 24 hours.</p>
+    <form class="cta" method="post" action="/start" id="startForm">
+      <a class="btn btn-main" href="/dashboard" id="continueBtn" hidden>Continue demo</a>
+      <button class="btn btn-main" type="submit" id="startBtn">Start demo</button>
+      <a class="btn btn-line" href="/docs">API docs</a>
+    </form>
+    <div class="err" id="err" role="status"></div>
+  </section>
+
+  <section class="wrap">
+    <div class="grid">
+      <div><b>Real dashboard</b><span>Payments, analytics, refunds, recurring.</span></div>
+      <div><b>Fake payments</b><span>Pay any checkout with one tap.</span></div>
+      <div><b>Live API</b><span>Demo API keys and real webhooks.</span></div>
+    </div>
+  </section>
+
+  <section class="wrap api">
+    <div>
+      <h2>Test your integration.</h2>
+      <p>Create an API key in the demo, then call it like the real thing.</p>
+    </div>
+    <div class="term">
+      <div class="term-bar">terminal</div>
+<pre><span class="k">curl</span> -X POST <span id="origin">https://demo.example</span>/api/payments/create \
+  -H <span class="c">"X-API-Key: fg_demo_…"</span> \
+  -H <span class="c">"Content-Type: application/json"</span> \
+  -d <span class="c">'{"amount_firo": 2.5, "order_id": "ORD-1"}'</span></pre>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Demo only. Never send real FIRO here.</span>
+    <a href="https://github.com/firogate/firogate-ce" target="_blank" rel="noopener">Run your own FiroGate</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  document.getElementById('origin').textContent = location.origin;
+  var has = '@@HAS_SESSION@@' === '1';
+  var start = document.getElementById('startBtn');
+  if (has) {
+    document.getElementById('continueBtn').hidden = false;
+    start.className = 'btn btn-line';
+    start.textContent = 'Start over';
+  }
+  document.getElementById('startForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    start.disabled = true;
+    start.textContent = 'Starting…';
+    fetch('/start', { method: 'POST', credentials: 'include', redirect: 'manual' })
+      .then(function (r) {
+        if (r.type === 'opaqueredirect' || r.ok || r.status === 303) { location.href = '/dashboard'; return; }
+        return r.json().then(function (d) { throw new Error(d.detail || 'Could not start'); });
+      })
+      .catch(function (err) {
+        document.getElementById('err').textContent = err.message || 'Could not start. Try again.';
+        start.disabled = false;
+        start.textContent = has ? 'Start over' : 'Start demo';
+      });
+  });
+})();
+</script>
+</body>
+</html>
