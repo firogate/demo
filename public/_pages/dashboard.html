@@ -628,19 +628,11 @@ html[data-theme="light"] #sb-profile-popup{
       </div>
       <div class="ni-children">
         <div class="ni-children-inner">
-          <div class="ni-group" data-ni-node="account-password">
+          <div class="ni-group" data-ni-node="account-security">
             <div class="ni-row">
               <button class="ni" onclick="go('account','sb-account',null);secTab('password')">
-                <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /> <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /></svg>
-                <span class="ni-label" data-i18n="Password">Password</span>
-              </button>
-            </div>
-          </div>
-          <div class="ni-group" data-ni-node="account-tfa">
-            <div class="ni-row">
-              <button class="ni" onclick="go('account','sb-account',null);secTab('tfa')">
-                <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect width="14" height="20" x="5" y="2" rx="2" ry="2" /> <path d="M12 18h.01" /></svg>
-                <span class="ni-label" data-i18n="Secure 2FA">Secure 2FA</span>
+                <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /></svg>
+                <span class="ni-label" data-i18n="Security">Security</span>
               </button>
             </div>
           </div>
@@ -2332,10 +2324,6 @@ function syncProfileUI(d) {
   if (_displayName === 'Payment Gateway' && window.t) _displayName = window.t('Payment Gateway');
   document.getElementById('sb-uname').textContent = _displayName;
   { const _m = document.getElementById('sb-popup-mail'); if (_m) _m.textContent = _profileIdentLine(d); }
-  {
-    const _pwNode = document.querySelector('[data-ni-node="account-password"]');
-    if (_pwNode) _pwNode.style.display = d.auth_provider === 'account_number' ? 'none' : '';
-  }
   { const _u = document.getElementById('sb-popup-uname'); if (_u && _displayName) _u.textContent = _displayName; }
 
   ['ov-left', 'ov-balance', 'ov-earned'].forEach(function(id) {
@@ -2606,7 +2594,8 @@ function secTab(id) {
   const parentGroup = document.querySelector('[data-ni-node="' + parentNode + '"]');
   if (parentGroup) {
     parentGroup.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
-    const childNode = parentGroup.querySelector('[data-ni-node="' + parentNode + '-' + id + '"] .ni');
+    const childKey = (id === 'password' || id === 'tfa') ? 'security' : id;
+    const childNode = parentGroup.querySelector('[data-ni-node="' + parentNode + '-' + childKey + '"] .ni');
     if (childNode) childNode.classList.add('active');
     else document.getElementById(parentBtnId)?.classList.add('active');
   }
