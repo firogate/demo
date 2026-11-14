@@ -416,7 +416,7 @@ html[data-theme="light"] #sb-profile-popup{
 .sb-pop-theme [data-theme-opt] svg{width:12px!important;height:12px!important}
 </style>
 
-  <link rel="stylesheet" href="/static/css/solid.css?v=266d0f4977">
+  <link rel="stylesheet" href="/static/css/solid.css?v=748dd52012">
 <link rel="stylesheet" href="/static/css/demo.css?v=a76af0a503"><script src="/static/js/demo.js?v=0a33102c01" defer></script></head>
 <body class="">
   
@@ -2067,7 +2067,7 @@ html[data-theme="light"] .ag-input::placeholder{color:rgba(20,12,0,.4)}
     })();
   </script>
   
-<script src="/static/js/globe.js?v=82bc390554" defer></script>
+<script src="/static/js/globe.js?v=4907058a61" defer></script>
 <script>
 
 const ACTIVE_TAB = "@@ACTIVE_TAB@@";
@@ -4973,6 +4973,11 @@ async function openPayment(id, opts) {
   await _pvLoad();
 }
 
+function _pvTx(v, url) {
+  if (!url || !/^https:\/\//.test(url)) return _pvId(v);
+  return '<a class="pv-txlink" href="' + escHtml(url) + '" target="_blank" rel="noopener noreferrer" data-no-i18n data-tip="' + escHtml(v) + '"><code>' + escHtml(truncate(v, 18)) + '</code><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 3h6v6" /> <path d="M10 14 21 3" /> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg></a>' + _pvCopy(v);
+}
+
 function _pvId(v, n) {
   return '<code data-no-i18n data-tip="' + escHtml(v) + '">' + escHtml(truncate(v, n || 18)) + '</code>' + _pvCopy(v);
 }
@@ -5032,7 +5037,7 @@ async function _pvLoad() {
   pay += _pvRow('Payment ID', _pvId(p.payment_id));
   if (p.order_id) pay += _pvRow('Order', '<span data-no-i18n>' + escHtml(fmtOrderId(p.order_id)) + '</span>');
   if (p.order_description) pay += _pvRow('Description', '<span data-no-i18n>' + escHtml(p.order_description) + '</span>');
-  pay += _pvRow('Transaction ID', p.txid ? _pvId(p.txid) : dash);
+  pay += _pvRow('Transaction ID', p.txid ? _pvTx(p.txid, p.explorer_url) : dash);
   pay += _pvRow('Address', p.receiving_address ? _pvId(p.receiving_address) : dash);
   pay += _pvRow('Confirmations', '<span data-no-i18n>' + (p.confirmations || 0) + ' / ' + (p.required_confirmations || 0) + '</span>');
   if (p.confirmed_at) pay += _pvRow('Confirmed', '<span data-no-i18n>' + escHtml(fmtDate(p.confirmed_at)) + '</span>');
