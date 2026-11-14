@@ -79,7 +79,7 @@ def main(ce_path: str) -> None:
         print(f"  {out}  {len(html) // 1024} KB")
 
     print("Rendering pages")
-    render("dashboard/index.html", "dashboard.html", is_operator=False, show_market_price=True, active_tab="home")
+    render("dashboard/index.html", "dashboard.html", is_operator=False, show_market_price=True, active_tab="@@ACTIVE_TAB@@", active_sub="@@ACTIVE_SUB@@")
     render("checkout/index.html", "checkout.html", payment_id="@@PAYMENT_ID@@", preview_layout="")
     render("api-docs.html", "docs.html", api_version="1.0.0")
     render("about.html", "about.html")

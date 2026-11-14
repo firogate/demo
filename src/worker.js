@@ -19,6 +19,7 @@ add('GET', '/', PUBLIC, pages.home);
 add('POST', '/start', PUBLIC, startDemo);
 add('GET', '/dashboard', PUBLIC, pages.dashboard);
 add('GET', '/dashboard/:tab', PUBLIC, pages.dashboard);
+add('GET', '/dashboard/:tab/:sub', PUBLIC, pages.dashboard);
 add('GET', '/invoice/:id', PUBLIC, pages.invoice);
 add('GET', '/checkout/:id', PUBLIC, pages.checkoutRedirect);
 add('GET', '/pay/:slug', PUBLIC, pages.paylink);

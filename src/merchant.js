@@ -490,14 +490,18 @@ async function daily(env, sb, start, end) {
 }
 
 function series(map, start, end) {
-  const dates = [], sales = [], orders = [];
+  const dates = [], sales = [], orders = [], received = [], confirmed = [], failed = [];
   for (let d = new Date(start + 'T00:00:00Z'); dayStr(d) <= end; d.setUTCDate(d.getUTCDate() + 1)) {
     const k = dayStr(d);
+    const e = map[k];
     dates.push(k);
-    sales.push(map[k] ? round8(map[k].gross) : 0);
-    orders.push(map[k] ? map[k].orders : 0);
+    sales.push(e ? round8(e.gross) : 0);
+    orders.push(e ? e.orders : 0);
+    received.push(e ? round8(e.received) : 0);
+    confirmed.push(e ? e.successful : 0);
+    failed.push(e ? e.failed : 0);
   }
-  return { dates, sales, orders };
+  return { dates, sales, orders, received, confirmed, failed };
 }
 
 function sum(map) {

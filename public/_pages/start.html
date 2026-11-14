@@ -11,14 +11,15 @@
   @font-face { font-family: "Inter"; font-weight: 400; font-display: swap; src: url("/static/fonts/inter-latin-400-normal.woff2") format("woff2"); }
   @font-face { font-family: "Inter"; font-weight: 600; font-display: swap; src: url("/static/fonts/inter-latin-600-normal.woff2") format("woff2"); }
   @font-face { font-family: "Inter"; font-weight: 800; font-display: swap; src: url("/static/fonts/inter-latin-800-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Outfit"; font-weight: 100 900; font-display: swap; src: url("/static/fonts/gf-outfit-300.woff2") format("woff2"); }
   @font-face { font-family: "JetBrains Mono"; font-weight: 400; font-display: swap; src: url("/static/fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2"); }
   :root {
     --brand: #00A2A7; --accent: #2CC8CD; --bg: #0A0C0D; --surface: #121617; --border: rgba(255,255,255,.08); --border-2: rgba(255,255,255,.14);
     --text: #F4F7F7; --text-2: #B9C2C4; --text-3: #7D888B;
-    --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+    --font-d: "Outfit", "Inter", sans-serif; --surface-2: #191E20; --ink: #031517; --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
   }
   @media (prefers-color-scheme: light) {
-    :root { --bg: #F6F8F8; --surface: #FFFFFF; --border: rgba(10,20,22,.09); --border-2: rgba(10,20,22,.16); --text: #0B1314; --text-2: #3A4648; --text-3: #6A7679; --accent: #007E83; }
+    :root { --bg: #F1F3F3; --surface: #FFFFFF; --surface-2: #E9EDED; --brand: #00757B; --ink: #FFFFFF; --border: rgba(10,20,22,.09); --border-2: rgba(10,20,22,.16); --text: #0B1314; --text-2: #3A4648; --text-3: #6A7679; --accent: #007E83; }
   }
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
@@ -26,34 +27,37 @@
   a { color: inherit; text-decoration: none; }
   :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 6px; }
   .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
-  .top { display: flex; align-items: center; justify-content: space-between; height: 64px; border-bottom: 1px solid var(--border); }
-  .brand { font-weight: 800; font-size: 1.1rem; letter-spacing: -.01em; }
+  .top { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+  .brand { font-family: var(--font-d); font-weight: 700; font-size: 1.3rem; letter-spacing: -.03em; }
   .brand b { color: var(--accent); }
-  .brand span { margin-inline-start: 8px; padding: 3px 8px; border-radius: 20px; background: var(--brand); color: #fff; font-size: .7rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; vertical-align: 2px; }
+  .brand span { margin-inline-start: 8px; padding: 3px 9px; border-radius: 20px; background: var(--brand); color: var(--ink); font-family: var(--font); font-size: .7rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; vertical-align: 2px; }
   .top nav { display: flex; gap: 4px; }
   .top nav a { padding: 8px 12px; border-radius: 10px; font-size: .9rem; color: var(--text-2); }
   .top nav a:hover { color: var(--text); background: var(--surface); }
-  .hero { text-align: center; padding: 80px 0 56px; }
-  h1 { margin: 0 auto 14px; max-width: 680px; font-size: clamp(2.2rem, 6vw, 3.8rem); line-height: 1.05; letter-spacing: -.035em; font-weight: 800; }
+  .hero-box { position: relative; overflow: hidden; }
+  .hero { position: relative; z-index: 1; padding: 96px 20px 88px; }
+  .globe { position: absolute; z-index: 0; top: 50%; right: max(-140px, calc(50% - 640px)); transform: translateY(-50%); width: 620px; height: 620px; color: var(--accent); --globe-hop: #FFFFFF; pointer-events: none; }
+  h1 { margin: 0 0 16px; max-width: 600px; font-family: var(--font-d); font-size: clamp(2.6rem, 6.5vw, 4.6rem); line-height: 1; letter-spacing: -.045em; font-weight: 600; }
   h1 em { font-style: normal; color: var(--accent); }
-  .hero p { margin: 0 auto; max-width: 460px; color: var(--text-2); font-size: 1.1rem; }
-  .cta { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 30px; }
-  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 50px; padding: 0 24px; border-radius: 14px; border: 1px solid transparent; font: 600 1rem var(--font); cursor: pointer; }
-  .btn-main { background: var(--brand); color: #fff; }
-  .btn-main:hover { background: #008C91; }
+  .hero p { margin: 0; max-width: 440px; color: var(--text-2); font-size: 1.15rem; }
+  .cta { display: flex; justify-content: flex-start; gap: 10px; flex-wrap: wrap; margin-top: 30px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 50px; padding: 0 24px; border-radius: 12px; border: 0; font: 600 1rem var(--font); cursor: pointer; }
+  .btn-main { background: var(--brand); color: var(--ink); }
+  .btn-main:hover { background: var(--accent); }
   .btn-main:disabled { opacity: .6; cursor: default; }
-  .btn-line { background: var(--surface); border-color: var(--border-2); color: var(--text); }
-  .btn-line:hover { border-color: var(--text-3); }
+  .btn-line { background: var(--surface-2); color: var(--text); }
+  .btn-line:hover { background: var(--border-2); }
   .small { margin-top: 14px; font-size: .86rem; color: var(--text-3); }
   .grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
   .grid div { padding: 26px 20px; }
   .grid div + div { border-inline-start: 1px solid var(--border); }
-  .grid b { display: block; font-size: 1.05rem; margin-bottom: 4px; }
+  .grid div:first-child { padding-inline-start: 0; }
+  .grid b { display: block; font-family: var(--font-d); font-weight: 600; font-size: 1.15rem; margin-bottom: 4px; }
   .grid span { color: var(--text-3); font-size: .92rem; }
   .api { padding: 64px 0 80px; display: grid; grid-template-columns: 1fr 1.3fr; gap: 40px; align-items: center; }
-  h2 { margin: 0 0 10px; font-size: clamp(1.6rem, 3.5vw, 2.2rem); letter-spacing: -.025em; line-height: 1.1; font-weight: 800; }
+  h2 { margin: 0 0 10px; font-family: var(--font-d); font-size: clamp(1.7rem, 3.5vw, 2.4rem); letter-spacing: -.03em; line-height: 1.1; font-weight: 600; }
   .api p { margin: 0; color: var(--text-2); }
-  .term { border: 1px solid var(--border-2); border-radius: 16px; background: #0B0F10; overflow: hidden; }
+  .term { border: 0; border-radius: 18px; background: #0B0F10; overflow: hidden; }
   .term-bar { height: 40px; display: flex; align-items: center; padding: 0 16px; border-bottom: 1px solid rgba(255,255,255,.08); font: .74rem var(--mono); color: #7D888B; }
   pre { margin: 0; padding: 18px; overflow-x: auto; font: .82rem/1.75 var(--mono); color: #E6EEEE; }
   .k { color: #2CC8CD; } .c { color: #66777A; }
@@ -63,9 +67,11 @@
   .err { margin-top: 12px; color: #F2604F; font-size: .9rem; min-height: 1.2em; }
   @media (max-width: 760px) {
     .top nav a:not(:last-child) { display: none; }
-    .hero { padding: 56px 0 44px; }
+    .hero { padding: 40px 20px 44px; }
+    .globe { top: -40px; right: -230px; transform: none; width: 440px; height: 440px; opacity: .5; }
     .cta .btn { flex: 1 1 100%; }
     .grid { grid-template-columns: 1fr; }
+    .grid div { padding-inline: 0; }
     .grid div + div { border-inline-start: none; border-top: 1px solid var(--border); }
     .api { grid-template-columns: 1fr; gap: 24px; padding: 48px 0 60px; }
   }
@@ -81,6 +87,8 @@
 </header>
 
 <main>
+  <div class="hero-box">
+  <canvas class="globe" data-globe data-globe-step="2.6" data-globe-hops="4" data-globe-alpha=".6" aria-hidden="true"></canvas>
   <section class="wrap hero">
     <h1>Try <em>FiroGate</em> in your browser.</h1>
     <p>No real FIRO. Nothing to install. Your demo is deleted after 24 hours.</p>
@@ -91,6 +99,7 @@
     </form>
     <div class="err" id="err" role="status"></div>
   </section>
+  </div>
 
   <section class="wrap">
     <div class="grid">
@@ -122,6 +131,7 @@
   </div>
 </footer>
 
+<script src="/static/js/globe.js" defer></script>
 <script>
 (function () {
   document.getElementById('origin').textContent = location.origin;

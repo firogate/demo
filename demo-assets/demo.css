@@ -1,21 +1,21 @@
 .dm-bar {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  margin: 0 0 18px; padding: 10px 12px 10px 14px;
-  border: 1px solid rgba(0, 162, 167, .35); border-radius: 12px;
-  background: rgba(0, 162, 167, .08); font-size: .84rem;
+  margin: 0 0 22px; padding: 8px 8px 8px 12px;
+  border: 0; border-radius: 12px;
+  background: var(--bg2, #121617); font-size: .86rem;
 }
 .dm-bar-l { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .dm-tag {
   flex-shrink: 0; padding: 3px 9px; border-radius: 20px;
-  background: #00A2A7; color: #fff; font-size: .7rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  background: var(--brand, #00A2A7); color: var(--ink, #031517); font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
 }
 .dm-txt { color: var(--t2, #B9C2C4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .dm-end {
   flex-shrink: 0; height: 32px; padding: 0 12px; border-radius: 9px;
-  border: 1px solid var(--bw2, rgba(255,255,255,.14)); background: none; color: var(--t1, #fff);
-  font: 600 .8rem inherit; cursor: pointer;
+  border: 0; background: var(--bg4, #21282A); color: var(--t1, #fff);
+  font: 600 .82rem inherit; cursor: pointer;
 }
-.dm-end:hover { border-color: #00A2A7; color: #2CC8CD; }
+.dm-end:hover { background: var(--bg5, #2B3336); }
 .dm-key {
   display: inline-flex; align-items: center; margin: 8px 0 4px; height: 30px; padding: 0 12px;
   border-radius: 9px; border: 1px dashed rgba(0, 162, 167, .6); background: none;

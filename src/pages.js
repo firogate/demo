@@ -2,6 +2,9 @@ import { escapeHtml } from './util.js';
 import { sandboxFromCookie } from './sandbox.js';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+const TABS = ['home', 'api', 'payments', 'security', 'account', 'analytics', 'wallet', 'recurring'];
+const SUB_TABS = ['payments', 'analytics'];
+const SUB = /^[A-Za-z0-9_-]{1,64}$/;
 const PREVIEW_CSS = '<style>.st-wrap{display:none!important}#v2-themes{display:block!important}</style>';
 
 async function asset(env, request, path) {
@@ -41,10 +44,16 @@ export const pages = {
     return html(body);
   },
 
-  async dashboard({ env, request }) {
+  async dashboard({ env, request, params }) {
     const sb = await sandboxFromCookie(env, request);
     if (!sb) return redirect('/');
-    return page(env, request, 'dashboard.html');
+    const tab = TABS.includes(params.tab) ? params.tab : 'home';
+    const sub = params.sub && SUB_TABS.includes(tab) && SUB.test(params.sub) ? params.sub : '';
+    if (params.sub && !sub) return redirect('/dashboard');
+    let body = await asset(env, request, '/_pages/dashboard.html');
+    if (body === null) return html('Not found', 404);
+    body = body.replace('"@@ACTIVE_TAB@@"', JSON.stringify(tab)).replace('"@@ACTIVE_SUB@@"', JSON.stringify(sub));
+    return html(body);
   },
 
   async invoice({ env, request, url, params }) {
