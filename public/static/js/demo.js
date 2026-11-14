@@ -52,7 +52,7 @@
     keyButton('xp-input', 'xpub');
     webhookLog();
     mintTools();
-    privacyHint();
+    mintsHint();
   }
 
   function keyButton(inputId, kind) {
@@ -164,8 +164,8 @@
     }, 2500);
   }
 
-  function privacyHint() {
-    var tab = document.getElementById('t-privacy');
+  function mintsHint() {
+    var tab = document.getElementById('t-mints');
     if (!tab || tab.querySelector('.dm-inline')) return;
     var box = el('div', 'dm-inline');
     box.appendChild(el('span', 'dm-tag', tr('Demo')));
@@ -176,16 +176,16 @@
   }
 
   function mintTools() {
-    var target = document.getElementById('pv-prv');
+    var target = document.getElementById('pv-mnt');
     if (!target) return;
     var timer = null;
     function current() { return typeof window._pvId_cur === 'function' ? window._pvId_cur() : null; }
-    function refresh(id) { if (typeof window._pvPrivacy === 'function' && id === current()) window._pvPrivacy(id); }
+    function refresh(id) { if (typeof window._pvMints === 'function' && id === current()) window._pvMints(id); }
     function check() {
       var id = current();
       var old = document.querySelector('.dm-mint');
       if (!id) { if (old) old.remove(); return; }
-      fetch('/api/privacy/payments/' + encodeURIComponent(id), { credentials: 'include', cache: 'no-store' })
+      fetch('/api/spark-mints/payments/' + encodeURIComponent(id), { credentials: 'include', cache: 'no-store' })
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (d) {
           var o = document.querySelector('.dm-mint');
@@ -214,7 +214,7 @@
             row.appendChild(b);
           });
           box.appendChild(row);
-          var sec = document.getElementById('pv-prv-sec');
+          var sec = document.getElementById('pv-mnt-sec');
           if (sec) sec.appendChild(box);
         }).catch(function () {});
     }

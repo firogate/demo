@@ -4,7 +4,7 @@ import { resolveAuth, checkScope, startDemo, endDemo, cleanup, sessionInfo, demo
 import { merchantRoutes as pay, publicRoutes as pub } from './payments.js';
 import { account, keys, links, recurring, refunds, analytics, theme, wallet, merchantEvents, webhookLog } from './merchant.js';
 import { pages, html } from './pages.js';
-import { privacy } from './privacy.js';
+import { sparkMints } from './spark_mints.js';
 
 const PUBLIC = 'public';
 const SESSION = 'session';
@@ -138,11 +138,11 @@ add('POST', '/api/xpub/preview', 'merchant', wallet.xpubPreview);
 add('POST', '/api/xpub/connect', 'merchant', wallet.xpubConnect);
 add('PATCH', '/api/xpub/methods', 'merchant', wallet.methods);
 add('POST', '/api/xpub/disconnect', 'merchant', wallet.xpubDisconnect);
-add('GET', '/api/privacy/status', 'merchant', privacy.status, 'read_invoice');
-add('GET', '/api/privacy/inputs', 'merchant', privacy.inputs, 'read_invoice');
-add('GET', '/api/privacy/payments/:id', 'merchant', privacy.payment, 'read_invoice');
-add('PATCH', '/api/privacy/settings', 'merchant', privacy.settings, 'wallet_connect');
-add('POST', '/api/demo/mint/:id', SESSION, privacy.simulateMint);
+add('GET', '/api/spark-mints/status', 'merchant', sparkMints.status, 'read_invoice');
+add('GET', '/api/spark-mints/inputs', 'merchant', sparkMints.inputs, 'read_invoice');
+add('GET', '/api/spark-mints/payments/:id', 'merchant', sparkMints.payment, 'read_invoice');
+add('PATCH', '/api/spark-mints/settings', 'merchant', sparkMints.settings, 'wallet_connect');
+add('POST', '/api/demo/mint/:id', SESSION, sparkMints.simulateMint);
 add('GET', '/spark/status', 'merchant', wallet.sparkStatus);
 add('POST', '/spark/connect', 'merchant', wallet.sparkConnect);
 add('POST', '/spark/disconnect', 'merchant', wallet.sparkDisconnect);

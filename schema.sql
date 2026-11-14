@@ -146,16 +146,16 @@ CREATE TABLE IF NOT EXISTS webhook_log (
 CREATE INDEX IF NOT EXISTS ix_webhook_log_sandbox ON webhook_log (sandbox_id, created_at);
 CREATE INDEX IF NOT EXISTS ix_webhook_log_payment ON webhook_log (payment_id);
 
-CREATE TABLE IF NOT EXISTS privacy_mints (
+CREATE TABLE IF NOT EXISTS spark_mints (
   payment_id TEXT PRIMARY KEY,
   sandbox_id TEXT NOT NULL,
   kind TEXT NOT NULL,
   mint_txid TEXT NOT NULL,
   created_at TEXT NOT NULL
 );
-CREATE INDEX IF NOT EXISTS ix_privacy_mints_sandbox ON privacy_mints (sandbox_id);
+CREATE INDEX IF NOT EXISTS ix_spark_mints_sandbox ON spark_mints (sandbox_id);
 
-CREATE TABLE IF NOT EXISTS privacy_prefs (
+CREATE TABLE IF NOT EXISTS spark_mint_prefs (
   sandbox_id TEXT PRIMARY KEY,
-  tracking INTEGER NOT NULL DEFAULT 1
+  check_on INTEGER NOT NULL DEFAULT 1
 );
