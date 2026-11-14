@@ -91,8 +91,8 @@
   <script src="/static/js/currency.js?v=e55697a2f9"></script>
   <script src="/static/js/sse.js?v=351a5d3905"></script>
   
-  <link rel="stylesheet" href="/static/css/solid.css?v=748dd52012">
-<link rel="stylesheet" href="/static/css/demo.css?v=a76af0a503"><script src="/static/js/demo.js?v=0a33102c01" defer></script></head>
+  <link rel="stylesheet" href="/static/css/solid.css?v=380c7874b2">
+<link rel="stylesheet" href="/static/css/demo.css?v=31061ab8a6"><script src="/static/js/demo.js?v=8c115e6218" defer></script></head>
 <body class="">
   
   <div id="site-bg" aria-hidden="true"></div>
@@ -164,7 +164,14 @@ code { font-family: var(--font-mono); font-size: .82em; background: var(--bg2); 
           <div class="cl-track-label">API</div>
           
             
-            <p class="cl-nochange">No API changes.</p>
+            <div class="cl-group">
+              <div class="cl-group-label">Added</div>
+              <ul>
+                
+                <li>Spark mint tracking: <code>GET /api/privacy/status</code>, <code>GET /api/privacy/inputs</code>, <code>GET /api/privacy/payments/{id}</code> and <code>PATCH /api/privacy/settings</code>. Read-only; FiroGate never holds keys or mints. See [PRIVACY_TRACKING.md](PRIVACY_TRACKING.md).</li>
+                
+              </ul>
+            </div>
             
           
         </div>
@@ -178,6 +185,10 @@ code { font-family: var(--font-mono); font-size: .82em; background: var(--bg2); 
             <div class="cl-group">
               <div class="cl-group-label">Added</div>
               <ul>
+                
+                <li>Spark mints page: see when transparent payments are minted to Spark in your own wallet, matched by the exact coins spent and checked with your Spark view key. Needs <code>addressindex=1</code> and <code>txindex=1</code> on the node.</li>
+                
+                <li>Payment page: a separate &quot;Spark mint&quot; section for transparent payments.</li>
                 
                 <li><a href="https://demo.firogate.com" target="_blank" rel="noopener">Live demo</a>: try the dashboard, checkout and API with fake FIRO. No install.</li>
                 

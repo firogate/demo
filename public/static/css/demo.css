@@ -72,3 +72,9 @@ body.dm-has-pay { padding-bottom: 110px; }
 
 .fg-method.fg-method-float { bottom: 96px; }
 body.fg-float-on { padding-bottom: 150px; }
+
+.dm-inline { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 12px 0 4px; padding: 12px; border-radius: 10px; border: 1px solid rgba(0, 162, 167, .35); background: rgba(0, 162, 167, .06); font: 500 13px/1.45 Inter, -apple-system, "Segoe UI", sans-serif; }
+.dm-inline .dm-txt { color: var(--t2, #B9C2C4); flex: 1 1 200px; white-space: normal; }
+.dm-inline .dm-pay-row { flex-basis: 100%; flex-wrap: wrap; }
+.dm-inline .dm-btn { flex: 1 1 140px; color: var(--t1, #E8EEEE); border-color: var(--bw2, rgba(255,255,255,.16)); }
+.dm-inline .dm-btn-main { color: #fff; }

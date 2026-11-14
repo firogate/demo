@@ -215,7 +215,7 @@ export async function endDemo({ env, url, request }) {
   return json({ ok: true }, 200, { 'Set-Cookie': clearCookie(url) });
 }
 
-const TABLES = ['payments', 'refunds', 'links', 'plans', 'api_keys', 'webhook_log'];
+const TABLES = ['payments', 'refunds', 'links', 'plans', 'api_keys', 'webhook_log', 'privacy_mints', 'privacy_prefs'];
 
 export async function deleteSandboxes(env, ids) {
   for (let i = 0; i < ids.length; i += 50) {

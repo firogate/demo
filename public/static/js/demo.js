@@ -51,6 +51,8 @@
     keyButton('spark-viewkey-input', 'spark');
     keyButton('xp-input', 'xpub');
     webhookLog();
+    mintTools();
+    privacyHint();
   }
 
   function keyButton(inputId, kind) {
@@ -160,6 +162,63 @@
           if (!d.configured || d.delivery || tries > 6) clearInterval(poll);
         }).catch(function () {});
     }, 2500);
+  }
+
+  function privacyHint() {
+    var tab = document.getElementById('t-privacy');
+    if (!tab || tab.querySelector('.dm-inline')) return;
+    var box = el('div', 'dm-inline');
+    box.appendChild(el('span', 'dm-tag', tr('Demo')));
+    box.appendChild(el('span', 'dm-txt', tr('Connect the demo xpub in Wallet, make a transparent invoice and pay it. Then open the payment to simulate a mint.')));
+    var head = tab.querySelector('.ph');
+    if (head && head.nextSibling) tab.insertBefore(box, head.nextSibling);
+    else tab.appendChild(box);
+  }
+
+  function mintTools() {
+    var target = document.getElementById('pv-prv');
+    if (!target) return;
+    var timer = null;
+    function current() { return typeof window._pvId_cur === 'function' ? window._pvId_cur() : null; }
+    function refresh(id) { if (typeof window._pvPrivacy === 'function' && id === current()) window._pvPrivacy(id); }
+    function check() {
+      var id = current();
+      var old = document.querySelector('.dm-mint');
+      if (!id) { if (old) old.remove(); return; }
+      fetch('/api/privacy/payments/' + encodeURIComponent(id), { credentials: 'include', cache: 'no-store' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) {
+          var o = document.querySelector('.dm-mint');
+          var ready = d && d.items && d.items.length && d.items[0].state === 'not_minted';
+          if (!ready || id !== current()) { if (o) o.remove(); return; }
+          if (o && o.dataset.id === id) return;
+          if (o) o.remove();
+          var box = el('div', 'dm-inline dm-mint');
+          box.dataset.id = id;
+          box.appendChild(el('span', 'dm-tag', tr('Demo')));
+          box.appendChild(el('span', 'dm-txt', tr('In a real store you mint in your own wallet. Try it here:')));
+          var row = el('div', 'dm-pay-row');
+          [['full', 'Simulate mint', true], ['partial', 'Mint part', false], ['other', 'Mint to another wallet', false]].forEach(function (k) {
+            var b = el('button', 'dm-btn' + (k[2] ? ' dm-btn-main' : ''), tr(k[1]));
+            b.type = 'button';
+            b.addEventListener('click', function () {
+              row.querySelectorAll('button').forEach(function (x) { x.disabled = true; });
+              post('/api/demo/mint/' + encodeURIComponent(id), { kind: k[0] }).then(function (res) {
+                box.remove();
+                refresh(id);
+                clearInterval(timer);
+                var n = 0;
+                timer = setInterval(function () { n += 1; refresh(id); if (n > 8 || id !== current()) clearInterval(timer); }, 8000);
+              });
+            });
+            row.appendChild(b);
+          });
+          box.appendChild(row);
+          var sec = document.getElementById('pv-prv-sec');
+          if (sec) sec.appendChild(box);
+        }).catch(function () {});
+    }
+    new MutationObserver(function () { check(); }).observe(target, { childList: true });
   }
 
   function webhookLog() {

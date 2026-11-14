@@ -2,7 +2,7 @@ import { escapeHtml } from './util.js';
 import { sandboxFromCookie } from './sandbox.js';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
-const TABS = ['home', 'api', 'payments', 'security', 'account', 'analytics', 'wallet', 'recurring'];
+const TABS = ['home', 'api', 'payments', 'security', 'account', 'analytics', 'wallet', 'recurring', 'privacy'];
 const SUB_TABS = ['payments', 'analytics'];
 const SUB = /^[A-Za-z0-9_-]{1,64}$/;
 const PREVIEW_CSS = '<style>.st-wrap{display:none!important}#v2-themes{display:block!important}</style>';
