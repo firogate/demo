@@ -107,7 +107,7 @@ def main(ce_path: str) -> None:
     if tdir.is_dir():
         for f in sorted(tdir.iterdir()):
             if f.suffix in (".webp", ".jpg", ".png") and f.stem not in thumbs:
-                thumbs[f.stem] = f"/static/images/themes/{f.name}"
+                thumbs[f.stem] = f"/static/images/themes/{f.name}?v={hashlib.md5(f.read_bytes()).hexdigest()[:8]}"
     (ROOT / "src" / "generated.js").write_text(
         "export const THUMBNAILS = " + json.dumps(thumbs, indent=2) + ";\n"
         + f"export const APP_VERSION = {json.dumps(version)};\n",
