@@ -25,6 +25,7 @@ add('GET', '/invoice/:id', PUBLIC, pages.invoice);
 add('GET', '/checkout/:id', PUBLIC, pages.checkoutRedirect);
 add('GET', '/pay/:slug', PUBLIC, pages.paylink);
 add('GET', '/docs', PUBLIC, pages.docs);
+add('GET', '/docs/:slug', PUBLIC, pages.docs);
 add('GET', '/about', PUBLIC, pages.about);
 add('GET', '/changelog', PUBLIC, pages.changelog);
 add('GET', '/theme-preview', PUBLIC, pages.themePreview);

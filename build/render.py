@@ -28,6 +28,7 @@ def main(ce_path: str) -> None:
         shutil.copy2(f, dest / f.name)
 
     version = _app_version(ce)
+    api_version = _api_version(ce)
 
     def bust(path):
         if not isinstance(path, str) or not path.startswith("/static/"):
@@ -81,10 +82,15 @@ def main(ce_path: str) -> None:
     print("Rendering pages")
     render("dashboard/index.html", "dashboard.html", is_operator=False, show_market_price=True, active_tab="@@ACTIVE_TAB@@", active_sub="@@ACTIVE_SUB@@")
     render("checkout/index.html", "checkout.html", payment_id="@@PAYMENT_ID@@", preview_layout="")
-    render("api-docs.html", "docs.html", api_version="1.0.0")
-    render("about.html", "about.html")
+    sys.path.insert(0, str(ce))
+    from app.core.docs_nav import DOCS_NAV, DOCS_PAGES, DOCS_LEGACY, DOCS_HOME
+    demo_nav = [(g, [(s, t) for s, t in items if s != "self-hosting"]) for g, items in DOCS_NAV]
+    demo_legacy = {k: v for k, v in DOCS_LEGACY.items() if v != "self-hosting"}
+    render("api-docs.html", "docs.html", api_version=api_version, docs_nav=demo_nav, docs_page=DOCS_HOME,
+           docs_title=DOCS_PAGES[DOCS_HOME], docs_legacy=demo_legacy)
+    _demo_docs(PAGES / "docs.html")
     render("theme_preview.html", "theme-preview.html")
-    render("changelog.html", "changelog.html", releases=_releases(ce), api_version="1.0.0")
+    render("changelog.html", "changelog.html", releases=_releases(ce), api_version=api_version)
     for fixed in (True, False):
         for email in (True, False):
             for price in (True, False):
@@ -122,6 +128,25 @@ def _app_version(ce: Path) -> str:
     import re
     m = re.search(r'APP_VERSION\s*=\s*["\']([^"\']+)', (ce / "app" / "core" / "version.py").read_text())
     return m.group(1) if m else "0.0.0"
+
+
+def _demo_docs(path: Path) -> None:
+    import re
+    html = path.read_text(encoding="utf-8")
+    html, n = re.subn(r'\s*<article class="page" id="p-self-hosting".*?</article>', "", html, count=1, flags=re.S)
+    if not n:
+        sys.exit("docs: self-hosting page not found")
+    html = re.sub(r'<li><a href="/docs/self-hosting">[^<]*</a>[^<]*</li>', "", html)
+    html = html.replace("https://github.com/firogate/firogate-ce", "https://github.com/firogate/demo")
+    if "self-hosting" in html or "firogate-ce" in html:
+        sys.exit("docs: CE-only content left in demo docs")
+    path.write_text(html, encoding="utf-8")
+
+
+def _api_version(ce: Path) -> str:
+    import re
+    m = re.search(r'API_VERSION\s*=\s*["\']([^"\']+)', (ce / "app" / "core" / "version.py").read_text())
+    return m.group(1) if m else "1.0"
 
 
 def _releases(ce: Path):
