@@ -194,12 +194,18 @@ function filters(url, sb) {
   if (to) { where.push('created_at <= ?'); args.push(parseDate(to, true)); }
   const search = url.searchParams.get('search');
   if (search && search.trim()) {
-    const s = `%${search.trim()}%`;
-    where.push('(id LIKE ? OR order_id LIKE ? OR customer_email LIKE ? OR txid LIKE ?)');
-    args.push(s, s, s, s);
+    const s = `%${likeEscape(search.trim().toLowerCase().slice(0, 128))}%`;
+    where.push("(LOWER(id) LIKE ? ESCAPE '\\' OR LOWER(order_id) LIKE ? ESCAPE '\\' OR LOWER(customer_email) LIKE ? ESCAPE '\\' OR LOWER(txid) LIKE ? ESCAPE '\\' OR LOWER(receiving_address) LIKE ? ESCAPE '\\')");
+    args.push(s, s, s, s, s);
   }
   return { sql: where.join(' AND '), args };
 }
+
+function likeEscape(t) {
+  return t.replace(/[\\%_]/g, c => '\\' + c);
+}
+
+const SEARCH_FIELDS = [['id', 'id'], ['txid', 'txid'], ['order', 'order_id'], ['address', 'receiving_address'], ['email', 'customer_email']];
 
 function parseDate(s, endOfDay) {
   const v = s.trim();
@@ -269,15 +275,33 @@ export const merchantRoutes = {
   },
 
   async search({ env, url, sb }) {
-    const term = (url.searchParams.get('q') || '').trim();
+    const term = (url.searchParams.get('q') || '').trim().slice(0, 128);
     if (term.length < 2) return json([]);
-    const s = `%${term}%`;
-    const rows = (await env.DB.prepare(`SELECT * FROM payments WHERE sandbox_id = ? AND (id LIKE ? OR txid LIKE ? OR order_id LIKE ?) ORDER BY created_at DESC LIMIT 10`)
-      .bind(sb.id, s, s, s).all()).results;
     const t = term.toLowerCase();
-    return json(rows.map(p => ({
+    const pat = `%${likeEscape(t)}%`;
+    const amount = /^\d{1,9}(\.\d{1,8})?$/.test(term) ? Number(term) : null;
+    const conds = SEARCH_FIELDS.map(([, col]) => `LOWER(${col}) LIKE ? ESCAPE '\\'`);
+    const args = SEARCH_FIELDS.map(() => pat);
+    if (amount !== null) { conds.push('ABS(amount_firo - ?) < 0.00000001'); args.push(amount); }
+    const rows = (await env.DB.prepare(`SELECT * FROM payments WHERE sandbox_id = ? AND (${conds.join(' OR ')}) ORDER BY created_at DESC LIMIT 80`)
+      .bind(sb.id, ...args).all()).results;
+    const ranked = [];
+    for (const p of rows) {
+      let best = null;
+      for (const [key, col] of SEARCH_FIELDS) {
+        const v = p[col] || '';
+        const lv = v.toLowerCase();
+        if (!lv || !lv.includes(t)) continue;
+        const rank = lv === t ? 0 : (lv.startsWith(t) || lv.endsWith(t) ? 1 : 2);
+        if (!best || rank < best.rank) best = { rank, key, value: v };
+      }
+      if (!best && amount !== null && Math.abs((p.amount_firo || 0) - amount) < 1e-8) best = { rank: 1, key: 'amount', value: String(p.amount_firo) };
+      if (best) ranked.push({ best, p });
+    }
+    ranked.sort((a, b) => a.best.rank - b.best.rank || String(b.p.created_at).localeCompare(String(a.p.created_at)));
+    return json(ranked.slice(0, 12).map(({ best, p }) => ({
       payment_id: p.id, txid: p.txid, order_id: p.order_id, amount_firo: p.amount_firo, status: p.status, created_at: p.created_at,
-      match_on: (p.txid || '').toLowerCase().includes(t) ? 'txid' : (p.order_id || '').toLowerCase().includes(t) ? 'order' : 'id',
+      match_on: best.key, match_value: best.value, exact: best.rank === 0,
     })));
   },
 
