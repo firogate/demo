@@ -78,20 +78,3 @@ body.fg-float-on { padding-bottom: 150px; }
 .dm-inline .dm-pay-row { flex-basis: 100%; flex-wrap: wrap; }
 .dm-inline .dm-btn { flex: 1 1 140px; color: var(--t1, #E8EEEE); border-color: var(--bw2, rgba(255,255,255,.16)); }
 .dm-inline .dm-btn-main { color: #fff; }
-
-/* Section title band: starts at the sidebar edge, slanted end. Demo trial. */
-:root { --sec-band: #5b6466; --sec-band-ink: #ffffff; }
-html[data-theme="light"] { --sec-band: #d5dcdd; --sec-band-ink: #0d1415; }
-html body .tab .card { overflow: visible; }
-html body .tab .card h3 {
-  position: relative; isolation: isolate; display: inline-block;
-  padding: 6px 40px 6px 0; margin-bottom: 4px !important;
-  color: var(--sec-band-ink) !important;
-}
-html body .tab .card h3::before {
-  content: ""; position: absolute; z-index: -1; top: 0; bottom: 0; right: 0; left: -100vw;
-  background: var(--sec-band);
-  clip-path: polygon(0 0, calc(100% - 32px) 0, 100% 100%, 0 100%);
-}
-html[dir="rtl"] body .tab .card h3 { padding: 6px 0 6px 40px; }
-html[dir="rtl"] body .tab .card h3::before { left: 0; right: -100vw; clip-path: polygon(32px 0, 100% 0, 100% 100%, 0 100%); }
